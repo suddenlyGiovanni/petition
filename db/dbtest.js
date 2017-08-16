@@ -1,5 +1,5 @@
 const spicedPg = require('spiced-pg');
-const secrets = require('./secrets')
+const secrets = require('./secrets');
 
 var db = spicedPg(`postgres:${secrets.dbUser}:${secrets.dbPass}@localhost:5432/cities`);
 

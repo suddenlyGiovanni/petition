@@ -1,8 +1,14 @@
-// REQUIRED MODULES
+// REQUIRED MODULES_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 const express = require( 'express' );
 const hb = require( 'express-handlebars' );
 const bodyParser = require( 'body-parser' );
 const cookieParser = require( 'cookie-parser' );
+
+const spicedPg = require( 'spiced-pg' );
+const secrets = require( './secrets/secrets.json' );
+
+// MODULES VARIABLES_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+var db = spicedPg( `postgres:${secrets.dbUser}:${secrets.dbPass}@localhost:5432/petition` );
 
 // EXPRESS______________________________________________________________________
 const app = express();
@@ -79,9 +85,17 @@ app.get( '/petition', checkIfSigned, ( req, res ) => {
 app.post( '/petition', ( req, res ) => {
     let firstName = req.body.firstName;
     let lastName = req.body.lastName;
-    console.log( firstName, lastName );
+    // console.log( firstName, lastName );
     if ( firstName && lastName ) {
+        db.query( 'INSERT INTO signatures (firstName, lastName) VALUES ($1, $2)', [
+            firstName,
+            lastName
+        ] ).catch( ( err ) => {
+            console.error( err.stack );
+        } );
+
         res.cookie( 'petitionSigned', '1' );
+
         res.redirect( '/petition/signed' );
     }
 } );
@@ -91,7 +105,15 @@ app.get( '/petition/signed', checkIfNotSigned, ( req, res ) => {
 } );
 
 app.get( '/petition/signers', checkIfNotSigned, ( req, res ) => {
-    res.render( 'signers' );
+
+    db.query( 'SELECT firstName AS "firstName", lastName AS "lastName" FROM signatures' ).then( ( results ) => {
+        // console.log( results.rows );
+        res.render( 'signers', {
+            signers: results.rows
+        } );
+    } ).catch( ( err ) => {
+        console.error( err.stack );
+    } );
 } );
 
 
