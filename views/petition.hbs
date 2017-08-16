@@ -1,0 +1,21 @@
+<div>
+    <p>
+        Sign our petition to make the wearing of <u>Crocs</u> in public places a criminal act in every jurisdiction!
+    </p>
+    <div>
+        empty img
+    </div>
+    {{#if error}}
+        {{>error}}
+    {{/if}}
+    <section>
+        <form action="/petition" method="POST">
+            <input type="text" name="firstName" placeholder="Jhon">
+            <input type="text" name="lastName" placeholder="Doe">
+            <!-- <canvas id="canvas" width="300" height="300"></canvas>
+            <input type="text" name="signature" value="" hidden="true"> -->
+            <p>Sign Here</p>
+            <input type="submit" value="SUBMIT">
+        </form>
+    </section>
+</div>
