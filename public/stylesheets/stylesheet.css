@@ -1,4 +1,53 @@
+/* TO AFFECT ALL */
+
 * {
-    border: thin dotted purple;
-    margin: 0;
+  margin : 0;
+  border : thin dotted purple;
+}
+
+body {
+  display          : flex;
+  height           : 100%;
+  background-color : #AF8159;
+  flex-direction   : column;
+  justify-content  : space-between;
+}
+
+/* HEADER && HEADER PARTIALS */
+
+header {
+  position   : relative;
+  text-align : center;
+}
+
+/* MAIN && VIEWS */
+
+#petition {
+  display         : flex;
+  text-align      : center;
+  flex-direction  : column;
+  justify-content : center;
+}
+
+#petition form {
+  text-align : center;
+}
+
+canvas {
+  display   : block;
+  position  : relative;
+  left      : 50%;
+  width     : 400px;
+  height    : 100px;
+  transform : translateX(-50%);
+}
+
+input[type="submit"] {
+  /* display: block; */
+}
+
+/* FOOTER && FOOTER PARTIALS */
+
+footer {
+  text-align : center;
 }
