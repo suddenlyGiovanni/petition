@@ -4,3 +4,4 @@ package-lock.json
 secrets.json
 .tern-project
 .eslintrc.json
+test.md

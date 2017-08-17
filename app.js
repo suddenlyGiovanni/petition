@@ -96,11 +96,13 @@ app.get( '/petition', checkIfSigned, ( req, res ) => {
 app.post( '/petition', ( req, res ) => {
     let firstName = req.body.firstName;
     let lastName = req.body.lastName;
-    // console.log( firstName, lastName );
+    let signature = req.body.signature;
+    // console.log( firstName, lastName, signature );
     if ( firstName && lastName ) {
-        db.query( 'INSERT INTO signatures (firstName, lastName) VALUES ($1, $2) RETURNING id', [
+        db.query( 'INSERT INTO signatures (firstName, lastName, signature) VALUES ($1, $2, $3) RETURNING id', [
             firstName,
-            lastName
+            lastName,
+            signature
         ] ).then( ( results ) => {
             // console.log(results.rows[0].id);
             req.session.signatureId = results.rows[0].id;

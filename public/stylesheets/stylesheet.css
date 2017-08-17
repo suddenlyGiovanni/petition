@@ -37,8 +37,8 @@ canvas {
   display   : block;
   position  : relative;
   left      : 50%;
-  width     : 400px;
-  height    : 100px;
+  /*width     : 400px;
+  height    : 100px;*/
   transform : translateX(-50%);
 }
 
