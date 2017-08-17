@@ -3,6 +3,7 @@ const express = require( 'express' );
 const hb = require( 'express-handlebars' );
 const bodyParser = require( 'body-parser' );
 const cookieParser = require( 'cookie-parser' );
+const cookieSession = require( 'cookie-session' );
 
 const spicedPg = require( 'spiced-pg' );
 const secrets = require( './secrets/secrets.json' );
@@ -26,7 +27,7 @@ app.use( cookieParser() );
 
 // if user hasn't signed then redirect to petition
 const checkIfNotSigned = ( req, res, next ) => {
-    if ( !req.cookies.petitionSigned ) {
+    if ( !req.session.signatureId ) {
         res.redirect( '/petition' );
     } else {
         next();
@@ -35,12 +36,22 @@ const checkIfNotSigned = ( req, res, next ) => {
 
 // if user have already signed the petition then redirect to signed
 const checkIfSigned = ( req, res, next ) => {
-    if ( req.cookies.petitionSigned ) {
+    if ( req.session.signatureId ) {
         res.redirect( '/petition/signed' );
     } else {
         next();
     }
 };
+// _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+
+// COOKIEPARSER_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+app.use( cookieSession( {
+    secret: secrets.sessionSecret,
+    maxAge: 1000 * 60 * 60 * 24 * 14
+} ) );
+// _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
 
 // STATIC ASSETS _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 // serve to the client (if it requires it) the content of the public folder.
@@ -87,16 +98,16 @@ app.post( '/petition', ( req, res ) => {
     let lastName = req.body.lastName;
     // console.log( firstName, lastName );
     if ( firstName && lastName ) {
-        db.query( 'INSERT INTO signatures (firstName, lastName) VALUES ($1, $2)', [
+        db.query( 'INSERT INTO signatures (firstName, lastName) VALUES ($1, $2) RETURNING id', [
             firstName,
             lastName
-        ] ).catch( ( err ) => {
+        ] ).then( ( results ) => {
+            // console.log(results.rows[0].id);
+            req.session.signatureId = results.rows[0].id;
+            res.redirect( '/petition/signed' );
+        } ).catch( ( err ) => {
             console.error( err.stack );
         } );
-
-        res.cookie( 'petitionSigned', '1' );
-
-        res.redirect( '/petition/signed' );
     }
 } );
 
