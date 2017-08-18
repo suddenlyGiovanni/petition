@@ -1,3 +1,5 @@
+<script type="text/javascript" src="/javascript/petition.js"></script>
+
 <div id="petition">
     <p>
         Sign our petition to make the wearing of <u>Crocs</u> in public places a criminal act in every jurisdiction!
@@ -10,13 +12,13 @@
     {{/if}}
     <section>
         <form action="/petition" method="POST">
-            <input type="text" name="firstName" placeholder="First Name">
-            <input type="text" name="lastName" placeholder="Last Name">
-            <input type="text" name="signature" hidden="true">
+            <input type="text" name="firstName" placeholder="First Name" required>
+            <input type="text" name="lastName" placeholder="Last Name" required>
+            <input type="text" name="signature" hidden="true" required>
             <p>Sign Here</p>
             <canvas id="canvas" width="400" height="100"></canvas>
-            <input id="clear" type="button" name="clear" value="CLEAR">
-            <input type="submit" value="SUBMIT">
+            <button type="button" name="clear">CLEAR</button>
+            <button type="submit" name="SUBMIT">SUBMIT</button>
         </form>
     </section>
 </div>

@@ -1,7 +1,8 @@
 $( document ).ready( function () {
     // DOM HANDLERS:
     var $canvas = $( '#canvas' )[ 0 ];
-    var $btnClear = $( '#clear' );
+    var $btnClear = $( 'button[name="clear"]' );
+    // var $btnSubmit = $( 'button[type="submit"]' );
     var ctx;
 
     // GLOBAL VARIABLES:
@@ -15,40 +16,30 @@ $( document ).ready( function () {
 
 
     // EVENT LISTENERS:
-    if ( $canvas ) {
 
-        ctx = $canvas.getContext( '2d' );
 
-        $canvas.addEventListener( 'mousemove', function ( event ) {
-            findXY( 'move', event );
-        } );
+    ctx = $canvas.getContext( '2d' );
 
-        $canvas.addEventListener( 'mousedown', function ( event ) {
-            findXY( 'down', event );
-        } );
+    $canvas.addEventListener( 'mousemove', function ( event ) {
+        findXY( 'move', event );
+    } );
 
-        $canvas.addEventListener( 'mouseup', function ( event ) {
-            findXY( 'up', event );
-        } );
+    $canvas.addEventListener( 'mousedown', function ( event ) {
+        findXY( 'down', event );
+    } );
 
-        $canvas.addEventListener( 'mouseout', function ( event ) {
-            findXY( 'out', event );
-        } );
-    }
+    $canvas.addEventListener( 'mouseup', function ( event ) {
+        findXY( 'up', event );
+    } );
+
+    $canvas.addEventListener( 'mouseout', function ( event ) {
+        findXY( 'out', event );
+    } );
+
 
     $btnClear.click( clear );
 
-    $('form').on('submit', function (event) {
-        var first = $( 'input[name="firstName"]' ).val();
-        var last = $( 'input[name="lastName"]' ).val();
-        var sig = $( 'input[name="signature"]' ).val();
-        if (!first && !last && !sig) {
-            event.preventDefault();
-            alert('form not valid');
-        }
-    });
-
-
+    // SIGNATURES get mouse position
     function findXY( res, event ) {
         if ( res == 'down' ) {
             prevX = currX;
@@ -56,6 +47,14 @@ $( document ).ready( function () {
             currX = event.offsetX;
             currY = event.offsetY;
             drawable = true;
+            dot = true;
+            if ( dot ) {
+                ctx.beginPath();
+                ctx.fillStyle = 'black';
+                ctx.fillRect( currX, currY, 2, 2 );
+                ctx.closePath();
+                dot = false;
+            }
         }
         if ( res == 'up' || res == 'out' ) {
             drawable = false;
@@ -72,6 +71,7 @@ $( document ).ready( function () {
         }
     }
 
+    // SIGNATURES get draw path
     function draw() {
         ctx.beginPath();
         ctx.moveTo( prevX, prevY );
@@ -82,6 +82,8 @@ $( document ).ready( function () {
         ctx.closePath();
     }
 
+
+    // SIGNATURES clear canvas
     function clear() {
         $( 'input[name="firstName"]' ).val( '' );
         $( 'input[name="lastName"]' ).val( '' );

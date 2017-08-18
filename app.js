@@ -98,14 +98,14 @@ app.post( '/petition', ( req, res ) => {
     let lastName = req.body.lastName;
     let signature = req.body.signature;
     // console.log( firstName, lastName, signature );
-    if ( firstName && lastName ) {
+    if ( firstName && lastName && signature ) {
         db.query( 'INSERT INTO signatures (firstName, lastName, signature) VALUES ($1, $2, $3) RETURNING id', [
             firstName,
             lastName,
             signature
         ] ).then( ( results ) => {
             // console.log(results.rows[0].id);
-            req.session.signatureId = results.rows[0].id;
+            req.session.signatureId = results.rows[ 0 ].id;
             res.redirect( '/petition/signed' );
         } ).catch( ( err ) => {
             console.error( err.stack );
@@ -114,7 +114,14 @@ app.post( '/petition', ( req, res ) => {
 } );
 
 app.get( '/petition/signed', checkIfNotSigned, ( req, res ) => {
-    res.render( 'signed' );
+    let id = req.session.signatureId;
+    db.query( `SELECT signature FROM signatures WHERE id='${id}'` ).then( ( results ) => {
+        res.render( 'signed', {
+            signature: results.rows[ 0 ].signature
+        } );
+    } ).catch( ( err ) => {
+        console.error( err.stack );
+    } );
 } );
 
 app.get( '/petition/signers', checkIfNotSigned, ( req, res ) => {
