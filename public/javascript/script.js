@@ -6,6 +6,7 @@ $( document ).ready( function () {
 
     // GLOBAL VARIABLES:
     var drawable = false;
+    var dot = false;
 
     var prevX = 0,
         currX = 0,
