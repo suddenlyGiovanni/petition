@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS signatures;
+DROP TABLE IF EXISTS users;
 
 CREATE TABLE users(
     id SERIAL PRIMARY KEY,
@@ -9,6 +9,8 @@ CREATE TABLE users(
     signature TEXT NOT NULL,
     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+DROP TABLE IF EXISTS signatures;
 
 CREATE TABLE signatures(
     id SERIAL PRIMARY KEY,

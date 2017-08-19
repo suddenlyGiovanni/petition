@@ -5,13 +5,13 @@
 const cluster = require( 'cluster' );
 const os = require( 'os' );
 
-// Setting up a CLUSTER to create multiple instances of the node server:
+// Setting up a CLUSTER to create multiple instances of the node main:
 // 1. to speared the load on multiple CPUs
 // 2. to increase reliability
 
 // setting up MAIN node module for the cluster
 cluster.setupMaster( {
-    exec: __dirname + '/app.js'
+    exec: __dirname + '/main.js'
 } );
 
 
