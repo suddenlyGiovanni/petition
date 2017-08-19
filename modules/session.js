@@ -1,4 +1,4 @@
-// checkSession.js
+// session.js
 
 const checkIfSigned = ( req, res, next ) => {
     if ( req.session.signatureId ) {
@@ -16,5 +16,5 @@ const checkIfNotSigned = ( req, res, next ) => {
     }
 };
 
-module.exports = checkIfSigned;
-module.exports = checkIfNotSigned;
+module.exports.checkIfSigned = checkIfSigned;
+module.exports.checkIfNotSigned = checkIfNotSigned;

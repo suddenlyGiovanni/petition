@@ -5,13 +5,13 @@ const petition = require( './petition' );
 
 
 // if user have already signed the petition then redirect to signed
-// const checkIfSigned = ( req, res, next ) => {
-//     if ( req.session.signatureId ) {
-//         res.redirect( '/petition/signed' );
-//     } else {
-//         next();
-//     }
-// };
+const checkIfSigned = ( req, res, next ) => {
+    if ( req.session.signatureId ) {
+        res.redirect( '/petition/signed' );
+    } else {
+        next();
+    }
+};
 
 // , session.checkIfSigned
 router.get( '/', ( req, res, next ) => {
