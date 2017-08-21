@@ -4,15 +4,15 @@ const signers = require( 'express' ).Router();
 const db = require( '../../../modules/dbQuery' );
 
 // if user has not yet signed then redirect to petition
-const checkIfNotSigned = ( req, res, next ) => {
-    if ( !req.session.signatureId ) {
-        res.redirect( '/petition' );
-    } else {
-        next();
-    }
-};
+// const checkIfNotSigned = ( req, res, next ) => {
+//     if ( !req.session.signatureId ) {
+//         res.redirect( '/petition' );
+//     } else {
+//         next();
+//     }
+// };
 // session.checkIfNotSigned,
-signers.get( '/', checkIfNotSigned, ( req, res, next ) => {
+signers.get( '/', ( req, res, next ) => {
 
     db.getSigners().then( ( signers ) => {
         res.render( 'signers', { signers } );

@@ -15,16 +15,15 @@ const db = spicedPg( `postgres:${dbUser}:${dbPass}@localhost:5432/${dbName}` );
 
 // save new signature to DB
 const postSignature = ( user_id, firstName, lastName, signature ) => {
-    const query = 'INSERT INTO signatures (user_id, firstName, lastName, signature) VALUES ($1, $2, $3, $4) RETURNING id';
+    const query = 'INSERT INTO signatures (user_id, "firstName", "lastName", signature) VALUES ($1, $2, $3, $4) RETURNING id';
     return db.query( query, [
         user_id,
         firstName,
         lastName,
         signature
-    ] ).then( ( results ) => {
-        // console.log(results.rows[ 0 ].id);
+    ] ).then( ( signatureId ) => {
         // returns the id of the signer
-        return results.rows[ 0 ].id;
+        return signatureId.rows[ 0 ].id;
     } ).catch( ( err ) => {
         console.error( err.stack );
     } );
@@ -32,7 +31,7 @@ const postSignature = ( user_id, firstName, lastName, signature ) => {
 
 // retrieve specified signature form DB
 const getSignature = ( id ) => {
-    return db.query( `SELECT signature FROM signatures WHERE id='${id}'` ).then( ( results ) => {
+    return db.query( `SELECT signature FROM signatures WHERE id = $1`, [ id ] ).then( ( results ) => {
         return results.rows[ 0 ].signature;
     } ).catch( ( err ) => {
         console.error( err.stack );
@@ -41,16 +40,62 @@ const getSignature = ( id ) => {
 
 // retrieve all the signers form DB
 const getSigners = () => {
-    return db.query( 'SELECT firstName AS "firstName", lastName AS "lastName" FROM signatures' ).then( ( results ) => {
+    return db.query( 'SELECT "firstName", "lastName" FROM signatures' ).then( ( results ) => {
         return results.rows;
     } ).catch( ( err ) => {
         console.error( err.stack );
     } );
 };
 
+// save new user to DB
+const postUser = ( firstName, lastName, email, password ) => {
+    const query = `INSERT INTO users ( "firstName", "lastName", email, password) VALUES ($1, $2, $3, $4) RETURNING id, "firstName", "lastName"`;
+    return db.query( query, [
+        firstName,
+        lastName,
+        email,
+        password
+    ] ).then( ( userSession ) => {
+        return {
+            user_id: userSession.rows[ 0 ].id,
+            firstName: userSession.rows[ 0 ].firstName,
+            lastName: userSession.rows[ 0 ].lastName
+        };
+    } ).catch( ( err ) => {
+        console.error( err.stack );
+    } );
+};
 
+// authenticate user
+const checkUser = ( email, password ) => {
+    const query = `SELECT id, "firstName", "lastName", email, password FROM users WHERE email = $1`;
+    return db.query( query, [ email ] ).then( ( dbUser ) => {
+        // console.log( dbUser.rows[ 0 ] );
+        return {
+            id: dbUser.rows[ 0 ].id,
+            firstName: dbUser.rows[ 0 ].firstName,
+            lastName: dbUser.rows[ 0 ].lastName,
+            email: dbUser.rows[ 0 ].email,
+            password: dbUser.rows[ 0 ].password
+        };
+    } ).then( ( dbUser ) => {
+        if ( dbUser.password === password ) {
+            return {
+                user_id: dbUser.id,
+                firstName: dbUser.firstName,
+                lastName: dbUser.lastName,
+            };
+        } else {
+            throw 'password do not match';
+        }
+    } ).catch( ( err ) => {
+        console.error( err.stack );
+    } );
+};
 
 
 module.exports.postSignature = postSignature;
 module.exports.getSignature = getSignature;
 module.exports.getSigners = getSigners;
+module.exports.postUser = postUser;
+module.exports.checkUser = checkUser;
