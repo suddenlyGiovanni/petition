@@ -38,14 +38,28 @@ const getSignature = ( user_id ) => {
 
 // retrieve all the signers form DB
 const getSigners = () => {
-    return db.query(
-        `SELECT users."firstName", users."lastName", user_profiles.age, user_profiles.city, user_profiles.url
-        FROM users
-        JOIN user_profiles
-        ON users.id = user_profiles.user_id;`
-    ).then( ( results ) => {
-        console.log(results.rows);
+    const query = `SELECT users."firstName", users."lastName", user_profiles.age, user_profiles.city, user_profiles.url
+    FROM users
+    JOIN user_profiles
+    ON users.id = user_profiles.user_id;`;
+    return db.query( query ).then( ( results ) => {
+        // console.log( results.rows );
         return results.rows;
+    } ).catch( ( err ) => {
+        console.error( err.stack );
+    } );
+};
+
+// retrive all signer from a specified city
+
+const getSignersCity = ( city ) => {
+    const query = `SELECT users."firstName", users."lastName", user_profiles.age, user_profiles.url
+                FROM users
+                JOIN user_profiles
+                ON users.id = user_profiles.user_id
+                WHERE user_profiles.city = $1;`;
+    return db.query( query, [ city ] ).then( ( signersByCity ) => {
+        return signersByCity;
     } ).catch( ( err ) => {
         console.error( err.stack );
     } );
@@ -119,4 +133,5 @@ module.exports.postUserProfile = postUserProfile;
 module.exports.postSignature = postSignature;
 module.exports.getSignature = getSignature;
 module.exports.getSigners = getSigners;
+module.exports.getSignersCity = getSignersCity;
 module.exports.checkUser = checkUser;

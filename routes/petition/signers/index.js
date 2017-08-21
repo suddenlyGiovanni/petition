@@ -1,22 +1,28 @@
 // ROUTE: --> /petition/signers
 const signers = require( 'express' ).Router();
-// const session = require( '../../../modules/checkSession' );
 const db = require( '../../../modules/dbQuery' );
 
-// if user has not yet signed then redirect to petition
-// const checkIfNotSigned = ( req, res, next ) => {
-//     if ( !req.session.signatureId ) {
-//         res.redirect( '/petition' );
-//     } else {
-//         next();
-//     }
-// };
-// session.checkIfNotSigned,
 signers.get( '/', ( req, res, next ) => {
     db.getSigners().then( ( signers ) => {
-        res.render( 'signers', { signers } );
+        res.render( 'signers', {
+            signers
+        } );
     } );
 
+} );
+
+signers.get( '/:city', ( req, res, next ) => {
+    const city = req.params.city;
+    db.getSignersCity( city ).then( ( signersByCity ) => {
+        const signers = {
+            city: city,
+            num: signersByCity.rowCount,
+            signers: signersByCity.rows
+        };
+        res.render( 'city', {
+            signers
+        } );
+    } );
 } );
 
 module.exports = signers;

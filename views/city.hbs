@@ -1,7 +1,7 @@
 <p>We the undersigned demad that the barbaric practice of wearing Crocs in pubblic places be banned by all nation.</p>
-
+<p>we have <b>{{signers.num}}</b> signers in <b>{{signers.city}}</b></p>
 <ul>
-    {{#each signers}}
+    {{#each signers.signers}}
         <li>
             {{#if this.url}}
                 <a href="http://{{this.url}}" target="_blank">
@@ -9,13 +9,9 @@
                 </a>
             {{else}}
                 {{this.firstName}} {{this.lastName}}
-            {{/if}}
-
+            {{/if}}&nbsp;
             ({{#if this.age}}
-                {{this.age}},
-            {{/if}}
-            {{#if this.city}}
-            <a href="/petition/signers/{{this.city}}">{{this.city}}</a>
+                {{ this.age }}
             {{/if}})
         </li>
     {{/each}}
