@@ -32,30 +32,31 @@ petition.post( '/', ( req, res, next ) => {
     // check if all the required fields have been filled (the client does the same)
     // user_id coming form the register/login process
     const user_id = req.session.user_id;
-    const firstName = req.body.firstName;
-    const lastName = req.body.lastName;
+    // const firstName = req.body.firstName;
+    // const lastName = req.body.lastName;
     const signature = req.body.signature;
 
-    if ( user_id && firstName && lastName && signature ) {
-        db.postSignature( user_id, firstName, lastName, signature ).then( ( signatureId ) => {
-            req.session.signatureId = signatureId;
+    if ( user_id && signature ) {
+        db.postSignature( user_id, signature ).then( ( signatureId ) => {
+            req.session.signature_id = signatureId;
             res.redirect( '/petition/signed' );
         } );
     }
 } );
 
 // can switch to a db query if necessary
-petition.use( ( req, res, next ) => {
-    if ( !req.session.signatureId ) {
-        res.status( 401 );
-        // TODO: turn on this filter
-        // res.render( 'error', {
-        //     message: 'UNAUTIORIZED'
-        // } );
-        next();
-    } else {
-        next();
-    }
-} ).use( '/signed', signed ).use( '/signers', signers );
+// petition.use( ( req, res, next ) => {
+//     if ( !req.session.signature_id ) {
+//         res.status( 401 );
+//         // TODO: turn on this filter
+//         // res.render( 'error', {
+//         //     message: 'UNAUTIORIZED'
+//         // } );
+//         next();
+//     } else {
+//         next();
+//     }
+// } );
+petition.use( '/signed', signed ).use( '/signers', signers );
 
 module.exports = petition;

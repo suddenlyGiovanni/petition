@@ -17,7 +17,7 @@ register.post( '/', ( req, res, next ) => {
         db.postUser( firstName, lastName, email, password ).then( ( userSession ) => {
             req.session = userSession;
             // console.log( req.session );
-            res.redirect( '/login' );
+            res.redirect( '/profile' );
         } );
     }
 } );

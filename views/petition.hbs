@@ -12,8 +12,8 @@
     {{/if}}
     <section>
         <form action="/petition" method="POST">
-            <input type="text" name="firstName" placeholder="First Name" value="{{firstName}}" readonly="{{readOnly}}" required>
-            <input type="text" name="lastName" placeholder="Last Name" value="{{lastName}}" readonly="{{readOnly}}" required>
+            <input type="text" name="firstName" placeholder="First Name" value="{{firstName}}" disabled required>
+            <input type="text" name="lastName" placeholder="Last Name" value="{{lastName}}" disabled required>
             <input type="text" name="signature" hidden="true" required>
             <p>Sign Here</p>
             <canvas id="canvas" width="400" height="100"></canvas>

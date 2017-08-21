@@ -13,7 +13,6 @@ const db = require( '../../../modules/dbQuery' );
 // };
 // session.checkIfNotSigned,
 signers.get( '/', ( req, res, next ) => {
-
     db.getSigners().then( ( signers ) => {
         res.render( 'signers', { signers } );
     } );

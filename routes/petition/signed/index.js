@@ -12,22 +12,13 @@ const db = require( '../../../modules/dbQuery' );
 //     }
 // };
 // session.checkIfNotSigned,
-signed.get( '/', ( req, res ) => {
-    let data = {};
+signed.get( '/', ( req, res, next ) => {
     // return the signature of the provided id
-    db.getSignature( req.session.signatureId ).then( ( signature ) => {
-        data.signature = signature;
-    } ).then( () => {
-        db.getSigners().then( ( signers ) => {
-            data.signersNum = signers.length;
-        } );
-    } ).then( () => {
-        res.render( 'signed', data );
-    } ).catch( ( err ) => {
-        console.error( err.stack );
+    const user_id = req.session.user_id;
+    console.log(req.session);
+    db.getSignature( user_id ).then( ( signature ) => {
+        res.render( 'signed', { signature } );
     } );
-
-
 } );
 
 module.exports = signed;

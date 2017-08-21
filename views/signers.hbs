@@ -2,6 +2,21 @@
 
 <ul>
     {{#each signers}}
-        <li>{{this.firstName}} {{this.lastName}}</li>
+        <li>
+            {{#if this.url}}
+                <a href="http://{{this.url}}" target="_blank">
+                    {{this.firstName}} {{this.lastName}}
+                </a>
+            {{else}}
+                {{this.firstName}} {{this.lastName}}
+            {{/if}}
+
+            ({{#if this.age}}
+                {{this.age}},
+            {{/if}}
+            {{#if this.city}}
+                {{this.city}}
+            {{/if}})
+        </li>
     {{/each}}
 </ul>

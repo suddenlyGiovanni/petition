@@ -3,6 +3,7 @@ const router = require( 'express' ).Router();
 const register = require( './register' );
 const login = require( './login' );
 const petition = require( './petition' );
+const profile = require('./profile');
 
 // TODO: fix this middleware it need to point to /petition/signed
 // router.use( ( req, res, next ) => {
@@ -25,6 +26,7 @@ router.get( '/', ( req, res, next ) => {
     res.redirect( 302, '/register' );
 } );
 
+router.use('/profile', profile);
 router.use( '/register', register );
 router.use( '/login', login );
 router.use( '/petition', petition );

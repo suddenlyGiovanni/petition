@@ -14,12 +14,10 @@ const db = spicedPg( `postgres:${dbUser}:${dbPass}@localhost:5432/${dbName}` );
 
 
 // save new signature to DB
-const postSignature = ( user_id, firstName, lastName, signature ) => {
-    const query = 'INSERT INTO signatures (user_id, "firstName", "lastName", signature) VALUES ($1, $2, $3, $4) RETURNING id';
+const postSignature = ( user_id, signature ) => {
+    const query = 'INSERT INTO signatures (user_id, signature) VALUES ($1, $2) RETURNING id';
     return db.query( query, [
         user_id,
-        firstName,
-        lastName,
         signature
     ] ).then( ( signatureId ) => {
         // returns the id of the signer
@@ -30,8 +28,8 @@ const postSignature = ( user_id, firstName, lastName, signature ) => {
 };
 
 // retrieve specified signature form DB
-const getSignature = ( id ) => {
-    return db.query( `SELECT signature FROM signatures WHERE id = $1`, [ id ] ).then( ( results ) => {
+const getSignature = ( user_id ) => {
+    return db.query( `SELECT signature FROM signatures WHERE id = $1`, [ user_id ] ).then( ( results ) => {
         return results.rows[ 0 ].signature;
     } ).catch( ( err ) => {
         console.error( err.stack );
@@ -40,7 +38,13 @@ const getSignature = ( id ) => {
 
 // retrieve all the signers form DB
 const getSigners = () => {
-    return db.query( 'SELECT "firstName", "lastName" FROM signatures' ).then( ( results ) => {
+    return db.query(
+        `SELECT users."firstName", users."lastName", user_profiles.age, user_profiles.city, user_profiles.url
+        FROM users
+        JOIN user_profiles
+        ON users.id = user_profiles.user_id;`
+    ).then( ( results ) => {
+        console.log(results.rows);
         return results.rows;
     } ).catch( ( err ) => {
         console.error( err.stack );
@@ -61,6 +65,22 @@ const postUser = ( firstName, lastName, email, password ) => {
             firstName: userSession.rows[ 0 ].firstName,
             lastName: userSession.rows[ 0 ].lastName
         };
+    } ).catch( ( err ) => {
+        console.error( err.stack );
+    } );
+};
+
+// save new profile to DB
+
+const postUserProfile = ( user_id, age, city, url ) => {
+    const query = 'INSERT INTO user_profiles (user_id, age, city, url) VALUES ($1, $2, $3, $4)';
+    return db.query( query, [
+        user_id,
+        age,
+        city,
+        url
+    ] ).then( () => {
+        return;
     } ).catch( ( err ) => {
         console.error( err.stack );
     } );
@@ -94,8 +114,9 @@ const checkUser = ( email, password ) => {
 };
 
 
+module.exports.postUser = postUser;
+module.exports.postUserProfile = postUserProfile;
 module.exports.postSignature = postSignature;
 module.exports.getSignature = getSignature;
 module.exports.getSigners = getSigners;
-module.exports.postUser = postUser;
 module.exports.checkUser = checkUser;
