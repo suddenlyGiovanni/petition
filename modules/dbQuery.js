@@ -39,6 +39,72 @@ const postUser = ( firstName, lastName, email, password ) => {
     } );
 };
 
+// GET USER
+const getUserAndProfile = ( user_id ) => {
+    const query = `SELECT users."firstName", users."lastName", users.email ,user_profiles.age, user_profiles.city, user_profiles.url
+    FROM users
+    JOIN user_profiles
+    ON users.id = user_profiles.user_id
+    WHERE users.id = ${user_id}`;
+    return db.query( query ).then( ( userData ) => {
+        return userData.rows;
+    } ).catch( ( err ) => {
+        console.error( err.stack );
+    } );
+};
+
+// UPDATE NEW USER
+const putUserAndProfile = ( firstName, lastName, email, password, user_id, age, city, url ) => {
+
+    if ( !password || password === null ) {
+        const query = `UPDATE users
+        SET "firstName" = $1, "lastName" = $2, email = $3
+        WHERE id = ${user_id}`;
+        const queryParams = [
+            firstName,
+            lastName,
+            email
+        ];
+        return db.query( query, queryParams ).then( () => {
+            const query = `UPDATE user_profiles
+            SET age = $1, city = $2, url = $3
+            WHERE user_id = ${user_id};`;
+            return db.query( query, [
+                age,
+                city,
+                url
+            ] ).catch( ( err ) => {
+                console.error( err.stack );
+            } );
+        } );
+    } else if ( password ) {
+        return hashPassword( password ).then( ( hashedPass ) => {
+            const query = `UPDATE users
+            SET "firstName" = $1, "lastName" = $2, email = $3, password = $4
+            WHERE id = ${user_id}`;
+            return db.query( query, [
+                firstName,
+                lastName,
+                email,
+                hashedPass
+            ] );
+        } ).then( () => {
+            const query = `UPDATE user_profiles
+            SET age = $1, city = $2, url = $3
+            WHERE user_id = ${user_id};`;
+            return db.query( query, [
+                age,
+                city,
+                url
+            ] ).catch( ( err ) => {
+                console.error( err.stack );
+            } );
+        } );
+    }
+};
+
+
+
 
 // AUTHENTICATE USER
 const checkUser = ( email, password ) => {
@@ -55,8 +121,8 @@ const checkUser = ( email, password ) => {
     } ).then( ( dbUser ) => {
         // step 2 - convert provided password and checkPassword
         // step 3 - checkPassword returns either true or false.
-        return checkPassword(password, dbUser.hashedPass).then( (doesMatch) => {
-            if (!doesMatch) {
+        return checkPassword( password, dbUser.hashedPass ).then( ( doesMatch ) => {
+            if ( !doesMatch ) {
                 throw 'wrong email and password';
             }
             return {
@@ -64,7 +130,7 @@ const checkUser = ( email, password ) => {
                 firstName: dbUser.firstName,
                 lastName: dbUser.lastName,
             };
-        });
+        } );
     } ).catch( ( err ) => {
         console.error( err.stack );
     } );
@@ -139,6 +205,9 @@ const getSignersCity = ( city ) => {
 };
 
 module.exports.postUser = postUser;
+module.exports.putUserAndProfile = putUserAndProfile;
+module.exports.getUserAndProfile = getUserAndProfile;
+
 module.exports.postUserProfile = postUserProfile;
 module.exports.postSignature = postSignature;
 module.exports.getSignature = getSignature;

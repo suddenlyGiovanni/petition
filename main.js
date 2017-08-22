@@ -52,7 +52,7 @@ app.use( cookieSession( {
 app.use( express.static( path.join( __dirname, 'public' ) ) );
 
 // ROUTING _____________________________________________________________________
-//  Connect all our routes to our application
+//  Connect all our routes to our applicationw
 app.use( '/', router );
 
 
@@ -83,25 +83,3 @@ app.use( ( err, req, res, next ) => {
 app.listen( 8080, () => {
     console.log( 'listening on port 8080.' );
 } );
-
-
-
-
-// var db = spicedPg( `postgres:${secrets.dbUser}:${secrets.dbPass}@localhost:5432/petition` );
-// if user hasn't signed then redirect to petition
-// const checkIfNotSigned = ( req, res, next ) => {
-//     if ( !req.session.signatureId ) {
-//         res.redirect( '/petition' );
-//     } else {
-//         next();
-//     }
-// };
-
-// if user have already signed the petition then redirect to signed
-// const checkIfSigned = ( req, res, next ) => {
-//     if ( req.session.signatureId ) {
-//         res.redirect( '/petition/signed' );
-//     } else {
-//         next();
-//     }
-// };
