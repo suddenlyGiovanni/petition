@@ -23,4 +23,11 @@ signed.get( '/', ( req, res, next ) => {
     } );
 } );
 
+signed.get( '/unsigning', ( req, res, next ) => {
+    db.deleteSignature( req.session.user_id ).then( () => {
+        delete req.session.signature_id;
+        res.redirect( '/petition' );
+    } );
+} );
+
 module.exports = signed;

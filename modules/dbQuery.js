@@ -103,9 +103,6 @@ const putUserAndProfile = ( firstName, lastName, email, password, user_id, age, 
     }
 };
 
-
-
-
 // AUTHENTICATE USER
 const checkUser = ( email, password ) => {
     // step 1 - search on db for matching email.
@@ -168,8 +165,17 @@ const postSignature = ( user_id, signature ) => {
 
 // retrieve specified signature form DB
 const getSignature = ( user_id ) => {
-    return db.query( 'SELECT signature FROM signatures WHERE id = $1', [ user_id ] ).then( ( results ) => {
+    return db.query( 'SELECT signature FROM signatures WHERE user_id = $1', [ user_id ] ).then( ( results ) => {
         return results.rows[ 0 ].signature;
+    } ).catch( ( err ) => {
+        console.error( err.stack );
+    } );
+};
+
+const deleteSignature = ( user_id ) => {
+    const query = 'DELETE FROM signatures WHERE user_id = $1;';
+    return db.query( query, [ user_id ] ).then( () => {
+        return;
     } ).catch( ( err ) => {
         console.error( err.stack );
     } );
@@ -204,13 +210,25 @@ const getSignersCity = ( city ) => {
     } );
 };
 
-module.exports.postUser = postUser;
-module.exports.putUserAndProfile = putUserAndProfile;
-module.exports.getUserAndProfile = getUserAndProfile;
 
+/* MODULE EXPORTS */
+
+// table: users
+module.exports.postUser = postUser;
+module.exports.checkUser = checkUser;
+
+// table: users JOIN user_profiles
+module.exports.getUserAndProfile = getUserAndProfile;
+module.exports.putUserAndProfile = putUserAndProfile;
+
+// table: user_profiles
 module.exports.postUserProfile = postUserProfile;
+
+// table: signature
 module.exports.postSignature = postSignature;
 module.exports.getSignature = getSignature;
+module.exports.deleteSignature = deleteSignature;
+
+// table: users JOIN signers
 module.exports.getSigners = getSigners;
 module.exports.getSignersCity = getSignersCity;
-module.exports.checkUser = checkUser;
