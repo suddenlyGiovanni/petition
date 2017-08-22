@@ -3,32 +3,24 @@ const router = require( 'express' ).Router();
 const register = require( './register' );
 const login = require( './login' );
 const petition = require( './petition' );
-const profile = require('./profile');
+const profile = require( './profile' );
 
-// TODO: fix this middleware it need to point to /petition/signed
-// router.use( ( req, res, next ) => {
-//     if ( req.session.signatureId ) {
-//         // res.status( 401 );
-//         console.log('signature id detected');
-//         res.redirect('/petition/signed');
-//         // next();
-//         // TODO: turn on this filter
-//         // res.render( 'error', {
-//         //     message: 'already signed the petition'
-//         // } );
-//     } else {
-//         next();
-//     }
-// } );
-
-
-router.get( '/', ( req, res, next ) => {
-    res.redirect( 302, '/register' );
+// if the user is already signed in then redirect to next route point;
+router.get( '/', ( req, res ) => {
+    const session = req.session;
+    if ( session.user_id ) {
+        console.log( 'user_id: ', session.user_id );
+        res.redirect('/petition');
+    } else if ( !session.user_id ) {
+        console.log( 'session: ', session);
+        res.redirect('/register');
+    }
 } );
 
-router.use('/profile', profile);
+router.use( '/profile', profile );
 router.use( '/register', register );
 router.use( '/login', login );
 router.use( '/petition', petition );
 
+/* MODULE EXPORTS */
 module.exports = router;

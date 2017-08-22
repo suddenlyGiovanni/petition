@@ -32,7 +32,8 @@ const postUser = ( firstName, lastName, email, password ) => {
         return {
             user_id: userSession.rows[ 0 ].id,
             firstName: userSession.rows[ 0 ].firstName,
-            lastName: userSession.rows[ 0 ].lastName
+            lastName: userSession.rows[ 0 ].lastName,
+            signature_id: false
         };
     } ).catch( ( err ) => {
         console.error( err.stack );
@@ -105,29 +106,45 @@ const putUserAndProfile = ( firstName, lastName, email, password, user_id, age, 
 
 // AUTHENTICATE USER
 const checkUser = ( email, password ) => {
+
     // step 1 - search on db for matching email.
-    const query = 'SELECT id, "firstName", "lastName", email, password FROM users WHERE email = $1';
-    return db.query( query, [ email ] ).then( ( dbUser ) => {
-        return {
-            id: dbUser.rows[ 0 ].id,
-            firstName: dbUser.rows[ 0 ].firstName,
-            lastName: dbUser.rows[ 0 ].lastName,
-            email: dbUser.rows[ 0 ].email,
-            hashedPass: dbUser.rows[ 0 ].password
-        };
-    } ).then( ( dbUser ) => {
-        // step 2 - convert provided password and checkPassword
-        // step 3 - checkPassword returns either true or false.
-        return checkPassword( password, dbUser.hashedPass ).then( ( doesMatch ) => {
-            if ( !doesMatch ) {
-                throw 'wrong email and password';
-            }
-            return {
-                user_id: dbUser.id,
-                firstName: dbUser.firstName,
-                lastName: dbUser.lastName,
-            };
-        } );
+    return db.query( 'SELECT EXISTS ( SELECT email FROM users WHERE email = $1 )', [ email ] ).then( ( feedBack ) => {
+        if ( feedBack.rows[0].exists  ) {
+            // step 1.5 - retrieve the data but do not send anything back yet.
+            const query = `SELECT users.id, users."firstName", users."lastName", users.email, users.password, signatures.id AS "signature_id"
+                        FROM users
+                        LEFT OUTER JOIN signatures
+                        ON users.id = signatures.user_id
+                        WHERE users.email = $1;`;
+            return db.query( query, [ email ] ).then( ( dbUser ) => {
+                return {
+                    id: dbUser.rows[ 0 ].id,
+                    firstName: dbUser.rows[ 0 ].firstName,
+                    lastName: dbUser.rows[ 0 ].lastName,
+                    email: dbUser.rows[ 0 ].email,
+                    hashedPass: dbUser.rows[ 0 ].password,
+                    signature_id: dbUser.rows[ 0 ].signature_id
+                };
+            } ).then( ( dbUser ) => {
+                // step 2 - convert provided password and checkPassword
+                // step 3 - checkPassword returns either true or false.
+                return checkPassword( password, dbUser.hashedPass ).then( ( doesMatch ) => {
+                    if ( !doesMatch ) {
+                        throw 'wrong email and password';
+                    }
+                    const signatureId = ( dbUser.signature_id ) ? dbUser.signature_id : false;
+                    return {
+                        user_id: dbUser.id,
+                        firstName: dbUser.firstName,
+                        lastName: dbUser.lastName,
+                        signature_id: signatureId
+                    };
+                } );
+            } );
+        } else {
+            // step 1.2 - if there's no matching mail in db then inform the route
+            return;
+        }
     } ).catch( ( err ) => {
         console.error( err.stack );
     } );

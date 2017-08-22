@@ -2,9 +2,11 @@
 
 <h1>Please log in.</h1>
 <form class="login" action="/login" method="post">
-    <input type="text" name="email" placeholder="jhon.doe@email.com" required>
+    <input type="email" name="email" placeholder="jhon.doe@email.com" required>
     <p>Email Address</p>
-    <input type="text" name="password" placeholder="letmein" required>
+    <input type="password" name="password" placeholder="letmein" required>
     <p>Password</p>
     <button type="submit" name="submit">LOGIN</button>
 </form>
+
+<p>if you are not already registered, you can <a href="/register">register here</a></p>

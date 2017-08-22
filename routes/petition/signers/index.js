@@ -2,16 +2,26 @@
 const signers = require( 'express' ).Router();
 const db = require( '../../../modules/dbQuery' );
 
-signers.get( '/', ( req, res, next ) => {
-    db.getSigners().then( ( signers ) => {
-        res.render( 'signers', {
-            signers
+signers.route( '/' )
+
+    .all( ( req, res, next ) => {
+        if ( req.session.signature_id == false ) {
+            res.redirect( '/petition' );
+        } else {
+            next();
+        }
+    } )
+
+    .get( ( req, res ) => {
+        db.getSigners().then( ( signers ) => {
+            res.render( 'signers', {
+                signers
+            } );
         } );
     } );
 
-} );
-
-signers.get( '/:city', ( req, res, next ) => {
+// ROUTE: --> /petition/signers/:city
+signers.get( '/:city', ( req, res ) => {
     const city = req.params.city;
     db.getSignersCity( city ).then( ( signersByCity ) => {
         const signers = {
@@ -25,4 +35,5 @@ signers.get( '/:city', ( req, res, next ) => {
     } );
 } );
 
+/* MODULE EXPORTS */
 module.exports = signers;

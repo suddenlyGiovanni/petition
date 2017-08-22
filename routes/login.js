@@ -2,24 +2,40 @@
 const login = require( 'express' ).Router();
 const db = require( '../modules/dbQuery' );
 
+login.route( '/' )
 
-login.get( '/', ( req, res, next ) => {
-    res.render( 'login' );
-} );
-
-login.post( '/', ( req, res, next ) => {
-    const email = req.body.email;
-    const password = req.body.password;
-    db.checkUser( email, password ).then( ( userSession ) => {
-        if ( typeof userSession !== 'undefined' ) {
-            req.session = userSession;
+    .all( ( req, res, next ) => {
+        if ( req.session.user_id ) {
             res.redirect( '/petition' );
-        } else {
-            res.status( 401 ).render( 'error', {
-                message: 'UNAUTIORIZED'
-            } );
         }
-    } );
-} );
+        next();
+    } )
 
+    .get( ( req, res ) => {
+        res.render( 'login' );
+    } )
+
+    .post( ( req, res ) => {
+
+        const email = req.body.email;
+        const password = req.body.password;
+
+        db.checkUser( email, password ).then( ( userSession ) => {
+            if ( !userSession ) {
+                res.render( 'error', {
+                    message: 'wrong mail and password'
+                } );
+            } else {
+                if ( !userSession.signature_id ) {
+                    req.session = userSession;
+                    res.redirect( '/petition' );
+                } else {
+                    req.session = userSession;
+                    res.redirect( '/petition/signed' );
+                }
+            }
+        } );
+    } );
+
+/* MODULE EXPORTS */
 module.exports = login;

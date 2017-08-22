@@ -2,23 +2,33 @@
 const register = require( 'express' ).Router();
 const db = require( '../modules/dbQuery' );
 
-register.get( '/', ( req, res, next ) => {
-    res.render( 'register' );
-} );
+register.route( '/' )
 
-register.post( '/', ( req, res, next ) => {
+    .all( ( req, res, next ) => {
+        if ( req.session.user_id ) {
+            res.redirect( '/petition' );
+        }
+        next();
+    } )
 
-    const firstName = req.body.firstName;
-    const lastName = req.body.lastName;
-    const email = req.body.email;
-    const password = req.body.password;
+    .get( ( req, res ) => {
+        res.render( 'register' );
+    } )
 
-    if ( firstName && lastName && email && password ) {
-        db.postUser( firstName, lastName, email, password ).then( ( userSession ) => {
-            req.session = userSession;
-            res.redirect( '/profile' );
-        } );
-    }
-} );
+    .post( ( req, res ) => {
 
+        const firstName = req.body.firstName;
+        const lastName = req.body.lastName;
+        const email = req.body.email;
+        const password = req.body.password;
+
+        if ( firstName && lastName && email && password ) {
+            db.postUser( firstName, lastName, email, password ).then( ( userSession ) => {
+                req.session = userSession;
+                res.redirect( '/profile' );
+            } );
+        }
+    } );
+
+/* MODULE EXPORTS */
 module.exports = register;
