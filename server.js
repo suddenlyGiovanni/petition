@@ -33,9 +33,7 @@ app.set( 'views', path.join( __dirname, 'views' ) );
 // MIDDLEWARE __________________________________________________________________
 
 // BODY PARSER
-app.use( bodyParser.urlencoded( {
-    extended: false
-} ) );
+app.use( bodyParser.urlencoded( { extended: false } ) );
 
 // COOKIEPARSER
 app.use( cookieParser() );
@@ -63,7 +61,6 @@ app.use( csrf( {
 // ROUTING _____________________________________________________________________
 //  Connect all our routes to our application
 app.use( '/', router );
-
 
 
 // ERROR:

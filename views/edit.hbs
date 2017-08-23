@@ -3,20 +3,37 @@
 <h2>Edit your profile information</h2>
 <form class="profile_edit" action="/profile/edit" method="POST">
     <input type="hidden" name="_csrf" value="{{csrfToken}}">
-    <input type="given-name" name="firstName" value="{{firstName}}" required>
-    <p>First Name</p>
-    <input type="family-name" name="lastName" value="{{lastName}}" required>
-    <p>Last Name</p>
-    <input type="email" name="email" value="{{email}}" required>
-    <p>Email Address</p>
-    <input type="password" name="password" disabled>
-    <p>Password</p>
-    <input type="number" name="age" value="{{age}}" >
-    <p>Age</p>
-    <input type="text" name="city" value="{{city}}" >
-    <p>City</p>
-    <input type="url" name="url" value="{{url}}" >
-    <p>Homepage</p>
+
+    <p>
+        <label>First Name <input type="given-name" name="firstName" value="{{firstName}}" autocomplete="given-name" required></label>
+    </p>
+
+    <p>
+        <label>Last Name <input type="family-name" name="lastName" value="{{lastName}}" autocomplete="family-name" required></label>
+    </p>
+
+
+    <p>
+        <label>Email Address <input type="email" name="email" value="{{email}}" autocomplete="email" required></label>
+    </p>
+
+    <p>
+        <label>Password <input type="password" name="password" autocomplete="new-password" disabled></label>
+    </p>
+
+    <p>
+        <label>Age <input type="number" name="age" value="{{age}}"></label>
+    </p>
+
+
+    <p>
+        <label>City <input type="text" name="city" value="{{city}}" autocomplete="address-level2"></label>
+    </p>
+
+
+    <input id="url" type="url" name="url" value="{{url}}">
+    <label for="url">Homepage</label>
+
     <button type="submit" name="update">UPDATE</button>
 </form>
 {{/userData}}

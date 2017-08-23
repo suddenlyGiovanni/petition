@@ -5,11 +5,14 @@ const db = require( '../../../modules/dbQuery' );
 signers.route( '/' )
 
     .all( ( req, res, next ) => {
+        if (!req.session || !req.session.user_id) {
+            res.render('error', {message : 'user unauthorized'});
+            // res.redirect( '/' );
+        }
         if ( req.session.signature_id == false ) {
             res.redirect( '/petition' );
-        } else {
-            next();
         }
+        next();
     } )
 
     .get( ( req, res ) => {

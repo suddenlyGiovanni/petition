@@ -7,12 +7,14 @@ const db = require( '../../modules/dbQuery' );
 petition.route( '/' )
 
     .all( ( req, res, next ) => {
-        if (!req.session) {
-            res.redirect('/register');
+        if ( !req.session || !req.session.user_id ) {
+            res.res.render( 'error', {
+                message: 'user unauthorized'
+            } );
+            // res.redirect( '/' );
         }
-        if (req.session.signature_id) {
-            console.log('inside / petition, about to redirect');
-            res.redirect('/petition/signed');
+        if ( req.session.signature_id ) {
+            res.redirect( '/petition/signed' );
         }
         next();
     } )
@@ -46,8 +48,8 @@ petition.route( '/' )
         }
     } );
 
-// petition.use()
 petition.use( '/signed', signed );
 petition.use( '/signers', signers );
 
+/* MODULE EXPORTS */
 module.exports = petition;

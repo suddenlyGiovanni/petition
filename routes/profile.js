@@ -4,6 +4,12 @@ const db = require( '../modules/dbQuery' );
 
 profile.route( '/' )
 
+    .all( ( req, res ) => {
+        if (!req.session || !req.session.user_id ) {
+            res.redirect('/');
+        }
+    } )
+
     .get( ( req, res ) => {
         res.render( 'profile', {
             csrfToken: req.csrfToken()
@@ -13,8 +19,8 @@ profile.route( '/' )
     .post( ( req, res ) => {
         const user_id = req.session.user_id;
         const age = ( req.body.age ) ? req.body.age : null;
-        const city = ( req.body.city ) ? req.body.city : null;
-        const url = ( req.body.url ) ? req.body.url : null;
+        const city = ( req.body.city ) ? req.body.city.toLowerCase() : null;
+        const url = ( req.body.url ) ? req.body.url.toLowerCase() : null;
         if ( user_id ) {
             db.postUserProfile( user_id, age, city, url ).then( () => {
                 res.redirect( '/petition' );
@@ -26,6 +32,11 @@ profile.route( '/' )
 
 profile.route( '/edit' )
 
+    .all( ( req, res ) => {
+        if (!req.session || !req.session.user_id ) {
+            res.redirect('/');
+        }
+    } )
 
     .get( ( req, res ) => {
         db.getUserAndProfile( req.session.user_id ).then( ( userData ) => {
@@ -40,21 +51,20 @@ profile.route( '/edit' )
 
     .post( ( req, res ) => {
         // data to set to the users table:
-        const firstName = req.body.firstName;
-        const lastName = req.body.lastName;
-        const email = req.body.email;
-        const password = ( req.body.password ) ? req.body.password : null;
+        const firstName = req.body.firstName.toLowerCase();
+        const lastName = req.body.lastName.toLowerCase();
+        const email = req.body.email.toLowerCase();
+        const password = ( req.body.password ) ? req.body.password.toLowerCase() : null;
         // data to set to the user_profiles table:
         const user_id = req.session.user_id;
         const age = ( req.body.age ) ? req.body.age : null;
-        const city = ( req.body.city ) ? req.body.city : null;
-        const url = ( req.body.url ) ? req.body.url : null;
+        const city = ( req.body.city ) ? req.body.city.toLowerCase() : null;
+        const url = ( req.body.url ) ? req.body.url.toLowerCase() : null;
 
         if ( user_id ) {
             db.putUserAndProfile( firstName, lastName, email, password, user_id, age, city, url ).then( () => {
                 req.session.firstName = firstName;
                 req.session.lastName = lastName;
-                // console.log( req.session );
                 res.redirect( '/petition' );
             } );
         } // TODO: add an error notification

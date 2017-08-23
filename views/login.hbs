@@ -3,10 +3,15 @@
 <h1>Please log in.</h1>
 <form class="login" action="/login" method="post">
     <input type="hidden" name="_csrf" value="{{csrfToken}}">
-    <input type="email" name="email" placeholder="jhon.doe@email.com" required>
-    <p>Email Address</p>
-    <input type="password" name="password" placeholder="letmein" required>
-    <p>Password</p>
+
+    <p>
+        <label>Email Address <input type="email" name="email" placeholder="jhon.doe@email.com" autocomplete="username" required></label>
+    </p>
+
+    <p>
+        <label>Password <input type="password" name="password" placeholder="letmein" autocomplete="current-password" required></label>
+    </p>
+
     <button type="submit" name="submit">LOGIN</button>
 </form>
 

@@ -4,4 +4,8 @@
     <a href="/petition/signers">See all {{this.num}} signers</a>
 {{signedData }}
 <a href="/profile/edit">Edit your profile</a>
-<a href="/petition/signed/unsigning">Delete your signature</a>
+
+<form action="/petition/signed/tounsign" method="GET">
+    <input type="hidden" name="_csrf" value="{{signedData.csrfToken}}">
+    <button type="submit">Delete your signature</button>
+</form>

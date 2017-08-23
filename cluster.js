@@ -11,7 +11,7 @@ const os = require( 'os' );
 
 // setting up MAIN node module for the cluster
 cluster.setupMaster( {
-    exec: __dirname + '/main.js'
+    exec: __dirname + '/server.js'
 } );
 
 
