@@ -7,8 +7,7 @@ const cookieSession = require( 'cookie-session' );
 const csrf = require( 'csurf' );
 const bodyParser = require( 'body-parser' );
 const router = require( './routes' );
-const secrets = require( './config/secrets.json' );
-
+const sessionSecret = process.env.SESSIONSECRET || require( './config/secrets.json' ).sessionSecret;
 // const spicedPg = require( 'spiced-pg' );
 
 // MODULES VARIABLES_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
@@ -43,7 +42,7 @@ app.use( cookieParser() );
 
 // COOKIESESSION
 app.use( cookieSession( {
-    secret: secrets.sessionSecret,
+    secret: sessionSecret,
     maxAge: 1000 * 60 * 60 * 24 * 14
 } ) );
 
@@ -90,6 +89,6 @@ app.use( ( err, req, res, next ) => {
 
 
 // SERVER ______________________________________________________________________
-app.listen( process.env.PORT || 8080, () => {
-    console.log( `listening on port ${process.env.PORT || 8080}.` );
+const listener = app.listen( process.env.PORT || 8080, () => {
+    console.log( `listening on port ${listener.address().port}.` );
 } );

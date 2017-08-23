@@ -3,19 +3,34 @@
 // REQUIRED MODULES_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 const spicedPg = require( 'spiced-pg' );
 
-const {
-    dbUser,
-    dbPass,
-    dbName
-} = require( '../config/secrets.json' );
+// const {
+//     dbUser,
+//     dbPass,
+//     dbName
+// } = require( '../config/secrets.json' );
 
 const {
     hashPassword,
     checkPassword
 } = require( './hasher' );
 
-// MODULES VARIABLES_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
-const db = spicedPg( `postgres:${dbUser}:${dbPass}@localhost:5432/${dbName}` );
+// MODULES VARIABLES _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+var db;
+
+if ( process.env.DATABASE_URL ) {
+    db = spicedPg( process.env.DATABASE_URL );
+} else {
+    db = spicedPg( `postgres:${dbUser}:${dbPass}@localhost:5432/${dbName}` );
+    const {
+        dbUser,
+        dbPass,
+        dbName
+    } = require( '../config/secrets.json' );
+}
+
+
+
+// const db = spicedPg( `postgres:${dbUser}:${dbPass}@localhost:5432/${dbName}` );
 
 // CREATE NEW USER
 const postUser = ( firstName, lastName, email, password ) => {
@@ -109,7 +124,7 @@ const checkUser = ( email, password ) => {
 
     // step 1 - search on db for matching email.
     return db.query( 'SELECT EXISTS ( SELECT email FROM users WHERE email = $1 )', [ email ] ).then( ( feedBack ) => {
-        if ( feedBack.rows[0].exists  ) {
+        if ( feedBack.rows[ 0 ].exists ) {
             // step 1.5 - retrieve the data but do not send anything back yet.
             const query = `SELECT users.id, users."firstName", users."lastName", users.email, users.password, signatures.id AS "signature_id"
                         FROM users
