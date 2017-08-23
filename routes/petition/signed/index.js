@@ -5,10 +5,10 @@ const db = require( '../../../modules/dbQuery' );
 signed.route( '/' )
 
     .all( ( req, res, next ) => {
-        console.log();
         if ( req.session.signature_id == false ) {
             res.redirect( '/petition' );
         } else {
+            console.log('we are here yo!');
             next();
         }
     } )
@@ -29,6 +29,7 @@ signed.route( '/' )
 
 
         Promise.all( [ getSignature, getSigners ] ).then( () => {
+            console.log('about to render /petiotion/signed');
             res.render( 'signed', signedData );
         } ).catch( ( err ) => {
             console.error( err.stack );

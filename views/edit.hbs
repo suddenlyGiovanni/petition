@@ -2,6 +2,7 @@
 {{#userData}}
 <h2>Edit your profile information</h2>
 <form class="profile_edit" action="/profile/edit" method="POST">
+    <input type="hidden" name="_csrf" value="{{csrfToken}}">
     <input type="given-name" name="firstName" value="{{firstName}}" required>
     <p>First Name</p>
     <input type="family-name" name="lastName" value="{{lastName}}" required>

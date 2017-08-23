@@ -11,6 +11,7 @@ petition.route( '/' )
             res.redirect('/register');
         }
         if (req.session.signature_id) {
+            console.log('inside / petition, about to redirect');
             res.redirect('/petition/signed');
         }
         next();
@@ -21,6 +22,7 @@ petition.route( '/' )
 
         if ( session.user_id && session.firstName && session.lastName ) {
             res.render( 'petition', {
+                csrfToken: req.csrfToken(),
                 firstName: session.firstName,
                 lastName: session.lastName,
                 readOnly: true

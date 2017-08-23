@@ -12,7 +12,9 @@ login.route( '/' )
     } )
 
     .get( ( req, res ) => {
-        res.render( 'login' );
+        res.render( 'login', {
+            csrfToken: req.csrfToken()
+        } );
     } )
 
     .post( ( req, res ) => {

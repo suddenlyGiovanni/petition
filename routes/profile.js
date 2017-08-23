@@ -2,54 +2,63 @@
 const profile = require( 'express' ).Router();
 const db = require( '../modules/dbQuery' );
 
-profile.get( '/', ( req, res, next ) => {
-    res.render( 'profile' );
-} );
+profile.route( '/' )
 
-profile.post( '/', ( req, res, next ) => {
-    const user_id = req.session.user_id;
-    const age = ( req.body.age ) ? req.body.age : null;
-    const city = ( req.body.city ) ? req.body.city : null;
-    const url = ( req.body.url ) ? req.body.url : null;
-    if ( user_id ) {
-        db.postUserProfile( user_id, age, city, url ).then( () => {
-            res.redirect( '/petition' );
+    .get( ( req, res ) => {
+        res.render( 'profile', {
+            csrfToken: req.csrfToken()
         } );
-    } // TODO: add an error notification
-} );
+    } )
 
-
-profile.get( '/edit', ( req, res, next ) => {
-    db.getUserAndProfile( req.session.user_id ).then( ( userData ) => {
-        // console.log( req.session );
-        res.render( 'edit', {
-            userData
-        } );
+    .post( ( req, res ) => {
+        const user_id = req.session.user_id;
+        const age = ( req.body.age ) ? req.body.age : null;
+        const city = ( req.body.city ) ? req.body.city : null;
+        const url = ( req.body.url ) ? req.body.url : null;
+        if ( user_id ) {
+            db.postUserProfile( user_id, age, city, url ).then( () => {
+                res.redirect( '/petition' );
+            } );
+        } // TODO: add an error notification
     } );
-} );
 
 
-profile.post( '/edit', ( req, res, next ) => {
-    // data to set to the users table:
-    const firstName = req.body.firstName;
-    const lastName = req.body.lastName;
-    const email = req.body.email;
-    const password = ( req.body.password ) ? req.body.password : null;
-    // data to set to the user_profiles table:
-    const user_id = req.session.user_id;
-    const age = ( req.body.age ) ? req.body.age : null;
-    const city = ( req.body.city ) ? req.body.city : null;
-    const url = ( req.body.url ) ? req.body.url : null;
 
-    if ( user_id ) {
-        db.putUserAndProfile( firstName, lastName, email, password, user_id, age, city, url ).then( () => {
-            req.session.firstName =  firstName;
-            req.session.lastName =  lastName;
+profile.route( '/edit' )
+
+
+    .get( ( req, res ) => {
+        db.getUserAndProfile( req.session.user_id ).then( ( userData ) => {
             // console.log( req.session );
-            res.redirect( '/petition' );
+            res.render( 'edit', {
+                userData: userData,
+                csrfToken: req.csrfToken()
+            } );
         } );
-    } // TODO: add an error notification
-} );
+    } )
+
+
+    .post( ( req, res ) => {
+        // data to set to the users table:
+        const firstName = req.body.firstName;
+        const lastName = req.body.lastName;
+        const email = req.body.email;
+        const password = ( req.body.password ) ? req.body.password : null;
+        // data to set to the user_profiles table:
+        const user_id = req.session.user_id;
+        const age = ( req.body.age ) ? req.body.age : null;
+        const city = ( req.body.city ) ? req.body.city : null;
+        const url = ( req.body.url ) ? req.body.url : null;
+
+        if ( user_id ) {
+            db.putUserAndProfile( firstName, lastName, email, password, user_id, age, city, url ).then( () => {
+                req.session.firstName = firstName;
+                req.session.lastName = lastName;
+                // console.log( req.session );
+                res.redirect( '/petition' );
+            } );
+        } // TODO: add an error notification
+    } );
 
 
 

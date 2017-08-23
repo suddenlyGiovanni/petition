@@ -2,6 +2,7 @@
 
 <h2>Sign up to join our campain today</h2>
 <form class="register" action="/register" method="POST">
+    <input type="hidden" name="_csrf" value="{{csrfToken}}">
     <input type="given-name" name="firstName" placeholder="Jhon" required>
     <p>First Name</p>
     <input type="family-name" name="lastName" placeholder="Doe" required>

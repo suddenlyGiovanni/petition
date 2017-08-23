@@ -2,9 +2,10 @@
 const express = require( 'express' );
 const path = require( 'path' );
 const hb = require( 'express-handlebars' );
-const bodyParser = require( 'body-parser' );
 const cookieParser = require( 'cookie-parser' );
 const cookieSession = require( 'cookie-session' );
+const csrf = require( 'csurf' );
+const bodyParser = require( 'body-parser' );
 const router = require( './routes' );
 const secrets = require( './config/secrets.json' );
 
@@ -46,13 +47,22 @@ app.use( cookieSession( {
     maxAge: 1000 * 60 * 60 * 24 * 14
 } ) );
 
+
+
 // STATIC ASSETS
 // serve to the client (if it requires it) the content of the public folder.
 // to the client this will be the root of the app.
 app.use( express.static( path.join( __dirname, 'public' ) ) );
 
+
+
+// CSURF ___________________________________________________________________
+app.use( csrf( {
+    cookie: true
+} ) );
+
 // ROUTING _____________________________________________________________________
-//  Connect all our routes to our applicationw
+//  Connect all our routes to our application
 app.use( '/', router );
 
 
@@ -80,6 +90,6 @@ app.use( ( err, req, res, next ) => {
 
 
 // SERVER ______________________________________________________________________
-app.listen( 8080, () => {
-    console.log( 'listening on port 8080.' );
+app.listen( process.env.PORT || 8080, () => {
+    console.log( `listening on port ${process.env.PORT || 8080}.` );
 } );

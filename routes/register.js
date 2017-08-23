@@ -8,11 +8,14 @@ register.route( '/' )
         if ( req.session.user_id ) {
             res.redirect( '/petition' );
         }
+
         next();
     } )
 
     .get( ( req, res ) => {
-        res.render( 'register' );
+        res.render( 'register', {
+            csrfToken: req.csrfToken()
+        } );
     } )
 
     .post( ( req, res ) => {
