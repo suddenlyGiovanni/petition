@@ -2,35 +2,12 @@
 
 // REQUIRED MODULES_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 const spicedPg = require( 'spiced-pg' );
-
-// const {
-//     dbUser,
-//     dbPass,
-//     dbName
-// } = require( '../config/secrets.json' );
-
+const psqlConfig = process.env.DATABASE_URL || require('../config/secrets.json').psqlConfig;
+const db = spicedPg(psqlConfig);
 const {
     hashPassword,
     checkPassword
 } = require( './hasher' );
-
-// MODULES VARIABLES _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
-var db;
-
-if ( process.env.DATABASE_URL ) {
-    db = spicedPg( process.env.DATABASE_URL );
-} else {
-    db = spicedPg( `postgres:${dbUser}:${dbPass}@localhost:5432/${dbName}` );
-    const {
-        dbUser,
-        dbPass,
-        dbName
-    } = require( '../config/secrets.json' );
-}
-
-
-
-// const db = spicedPg( `postgres:${dbUser}:${dbPass}@localhost:5432/${dbName}` );
 
 // CREATE NEW USER
 const postUser = ( firstName, lastName, email, password ) => {
