@@ -1,12 +1,13 @@
 // REQUIRED MODULES_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 const express = require( 'express' );
+const morgan = require('morgan');
 const path = require( 'path' );
 const hb = require( 'express-handlebars' );
 const cookieParser = require( 'cookie-parser' );
 const cookieSession = require( 'cookie-session' );
 const csrf = require( 'csurf' );
 const bodyParser = require( 'body-parser' );
-const router = require( './routes' );
+// const router = require( './routes' );
 const sessionSecret = process.env.SESSIONSECRET || require( './config/secrets.json' ).sessionSecret;
 // const spicedPg = require( 'spiced-pg' );
 
@@ -16,6 +17,9 @@ const sessionSecret = process.env.SESSIONSECRET || require( './config/secrets.js
 // EXPRESS
 const app = express();
 // _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+// HTTP request logger middleware
+// app.use(morgan('dev'))
+
 
 // TEMPLATING ENGINE:
 // view engine setup:
@@ -60,7 +64,9 @@ app.use( csrf( {
 
 // ROUTING _____________________________________________________________________
 //  Connect all our routes to our application
-app.use( '/', router );
+app.use( '/', require('./routes/root') );
+app.use( '/petition', require('./routes/petition') );
+
 
 
 // ERROR:

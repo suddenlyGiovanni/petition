@@ -10,11 +10,16 @@
     <section>
         <form action="/petition" method="POST">
             <input type="hidden" name="_csrf" value="{{csrfToken}}">
-            <input type="text" name="firstName" placeholder="First Name" value="{{firstName}}" disabled required>
-            <input type="text" name="lastName" placeholder="Last Name" value="{{lastName}}" disabled required>
+
+            <label>First Name <input type="text" name="firstName" placeholder="First Name" value="{{firstName}}" disabled required></label>
+
+            <label>Last Name <input type="text" name="lastName" placeholder="Last Name" value="{{lastName}}" disabled required></label>
+
             <input type="text" name="signature" hidden="true" required>
-            <p>Sign Here</p>
-            <canvas id="canvas" width="400" height="100"></canvas>
+            <p>
+                <label for="canvas">Sign Here</label>
+                <canvas id="canvas" width="400" height="100"></canvas>
+            </p>
             <button type="button" name="clear">CLEAR</button>
             <button type="submit" name="SUBMIT">SUBMIT</button>
         </form>
