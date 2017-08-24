@@ -13,9 +13,8 @@ const get = ( key ) => {
         client.get( key, ( err, data ) => {
             if ( err ) {
                 reject( err );
-            } else if ( data ) {
-                resolve( data );
             }
+            resolve( data );
         } );
     } );
 };
