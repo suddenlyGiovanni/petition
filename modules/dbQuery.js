@@ -2,8 +2,13 @@
 
 // REQUIRED MODULES_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 const spicedPg = require( 'spiced-pg' );
-const db = spicedPg(process.env.DATABASE_URL || require('../config/secrets.json').psqlConfig);
-const { hashPassword, checkPassword } = require( './hasher' );
+const db = spicedPg( process.env.DATABASE_URL || require( '../config/secrets.json' ).psqlConfig );
+const {
+    hashPassword,
+    checkPassword
+} = require( './hasher' );
+
+
 
 // CREATE NEW USER
 const postUser = ( firstName, lastName, email, password ) => {
