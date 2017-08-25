@@ -1,28 +1,43 @@
-<!-- /register -->
+<div class="row">
+    <form class="col s12 register" action="/register" method="POST">
 
-<h2>Sign up to join our campain today</h2>
-<form class="register" action="/register" method="POST">
-    <input type="hidden" name="_csrf" value="{{csrfToken}}">
+        <input type="hidden" name="_csrf" value="{{csrfToken}}">
 
+        <div class="row">
+            <!-- FIRST NAME -->
+            <div class="input-field col s12 m6">
+                <i class="material-icons prefix">person</i>
+                <input id="firstName" class="validate" type="text" name="firstName" autocomplete="given-name" required>
+                <label for="firstName">First Name</label>
+            </div>
+            <!-- LAST NAME -->
+            <div class="input-field col s12 m6">
+                <i class="material-icons prefix">person_outline</i>
+                <input id="family-name" class="validate" type="text" name="lastName" autocomplete="family-name" required>
+                <label for="family-name">Last Name</label>
+            </div>
+        </div>
 
-    <p>
-        <label>First Name <input type="given-name" name="firstName" placeholder="Jhon" autocomplete="given-name" required></label>
-    </p>
+        <!-- EMAIL -->
+        <div class="row">
+            <div class="input-field col s12">
+                <i class="material-icons prefix">email</i>
+                <input id="email" class="validate" type="email" name="email" autocomplete="email" required>
+                <label for="email" data-error="wrong email format" data-success="right">Email Address</label>
+            </div>
+        </div>
 
-    <p>
-        <label>Last Name <input type="family-name" name="lastName" placeholder="Doe" autocomplete="family-name" required></label>
-    </p>
+        <div class="row">
+            <div class="input-field col s12">
+                <i class="material-icons prefix">fingerprint</i>
+                <input id="password" class="validate" type="password" name="password" autocomplete="new-password" required>
+                <label for="password" data-error="wrong" data-success="right">Password</label>
+            </div>
+        </div>
 
-    <p>
-        <label>Email Address <input type="email" name="email" placeholder="jhon.doe@email.com" autocomplete="email" required></label>
-    </p>
+        <button class="btn waves-effect waves-light" type="submit" name="action">SIGN UP
+            <i class="material-icons right">check</i>
+        </button>
 
-    <p>
-        <label>Password <input type="password" name="password" placeholder="letmein" autocomplete="new-password" required></label>
-    </p>
-
-
-    <button type="submit" name="submit">SIGN UP</button>
-</form>
-
-<p>if you are already a member, please <a href="/login">log in</a></p>
+    </form>
+</div>
