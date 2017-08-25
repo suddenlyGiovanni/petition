@@ -68,7 +68,7 @@ router.route( '/login' )
 // ROUTE: --> /logout
 
 router.get( '/logout', ( req, res ) => {
-    req.session.destroy;
+    req.session.destroy();
     console.log( 'logging out',
         req.session );
     res.redirect( '/' );
