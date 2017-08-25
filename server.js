@@ -1,16 +1,11 @@
 // REQUIRED MODULES_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 const express = require( 'express' );
-const morgan = require( 'morgan' );
+// const morgan = require( 'morgan' );
 const path = require( 'path' );
 const hb = require( 'express-handlebars' );
 const cookieParser = require( 'cookie-parser' );
-// can remove cookie-session
-// const cookieSession = require( 'cookie-session' );
-
 const session = require( 'express-session' );
 const Store = require( 'connect-redis' )( session );
-
-
 const csrf = require( 'csurf' );
 const bodyParser = require( 'body-parser' );
 // const router = require( './routes' );
@@ -50,20 +45,23 @@ app.use( bodyParser.urlencoded( {
 // COOKIEPARSER
 app.use( cookieParser() );
 
-// COOKIESESSION
-// TODO: can delete cookieSession
-// app.use( cookieSession( {
-//     secret: sessionSecret,
-//     maxAge: 1000 * 60 * 60 * 24 * 14
-// } ) );
-
 // REDIS SESSION: EXPRESS-SESSION CONNECT-REDIS
-app.use( session( {
-    store: new Store( {
+let sessionStore = {};
+
+if ( process.env.REDIS_URL ) {
+    sessionStore = {
+        url: process.env.REDIS_URL
+    };
+} else {
+    sessionStore = {
         ttl: 3600,
-        host: process.env.REDIS_URL || 'localhost',
+        host: 'localhost',
         port: 6379
-    } ),
+    };
+}
+
+app.use( session( {
+    store: new Store( sessionStore ),
     resave: false,
     saveUninitialized: true,
     secret: sessionSecret
