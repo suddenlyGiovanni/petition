@@ -109,9 +109,9 @@ router.route( '\n', '/signed' )
         } );
     } );
 
-// ROUTE: --> /petition/signed/tounsign
-router.get( '/signed/tounsign', ( req, res ) => {
-    console.log( '\n', 'inside: GET /petition/signes/tounsign' );
+// ROUTE: --> /petition/signed/unsign
+router.get( '/signed/unsign', ( req, res ) => {
+    console.log( '\n', 'inside: GET /petition/signes/unsign' );
     db.deleteSignature( req.session.user_id ).then( () => {
         req.session.signature_id = false;
         res.redirect( '/petition' );

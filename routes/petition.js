@@ -5,6 +5,7 @@ const db = require( '../modules/dbQuery' );
 const checkIfSigned = ( req, res, next ) => {
     console.log( '\n', 'MIDDLEWARE: checkIfSigned' );
     console.log( req.session.signature_id );
+
     if ( !req.session.signature_id ) {
         console.log( 'NO signature_id' );
         console.log( 'routing to /petition' );
@@ -33,7 +34,8 @@ router.use( ( req, res, next ) => {
 router.route( '/' )
 
     .all( ( req, res, next ) => {
-        console.log( '\n', 'inside: ALL /petition');
+        console.log( '\n', 'inside: ALL /petition' );
+
         if ( req.session.signature_id ) {
             console.log( `signature_id =${req.session.signature_id}` );
             console.log( 'routing to /petition/signed' );
@@ -82,29 +84,40 @@ router.get( '/signed', checkIfSigned, ( req, res ) => {
         csrfToken: req.csrfToken()
     };
 
-    const getSignature = db.getSignature( user_id ).then( ( signature ) => {
-        return signedData.signature = signature;
-    } );
+    const getSignature = db.getSignature( user_id )
 
-    const getSigners = db.getSigners().then( ( signers ) => {
-        return signedData.num = signers.length;
-    } );
+        .then( ( signature ) => {
+            return signedData.signature = signature;
+        } );
+
+    const getSigners = db.getSigners()
+
+        .then( ( signers ) => {
+            return signedData.num = signers.length;
+        } );
 
 
-    Promise.all( [ getSignature, getSigners ] ).then( () => {
-        res.render( 'signed', signedData );
-    } ).catch( ( err ) => {
-        console.error( err.stack );
-    } );
+    Promise.all( [ getSignature, getSigners ] )
+
+        .then( () => {
+            res.render( 'signed', signedData );
+        } )
+
+        .catch( ( err ) => {
+            console.error( err.stack );
+        } );
 } );
 
-// ROUTE: --> /petition/signed/tounsign
-router.get( '/signed/tounsign', checkIfSigned, ( req, res ) => {
-    console.log( '\n', 'inside: GET /petition/signes/tounsign' );
-    db.deleteSignature( req.session.user_id ).then( () => {
-        req.session.signature_id = false;
-        res.redirect( '/petition' );
-    } );
+// ROUTE: --> /petition/signed/unsign
+router.get( '/signed/unsign', checkIfSigned, ( req, res ) => {
+    console.log( '\n', 'inside: GET /petition/signes/unsign' );
+
+    db.deleteSignature( req.session.user_id )
+
+        .then( () => {
+            req.session.signature_id = false;
+            res.redirect( '/petition' );
+        } );
 } );
 
 
@@ -112,12 +125,15 @@ router.get( '/signed/tounsign', checkIfSigned, ( req, res ) => {
 // ROUTE: --> /petition/signers
 router.get( '/signers', checkIfSigned, ( req, res ) => {
     console.log( '\n', 'inside: GET /petition/signes' );
-    db.getSigners().then( ( signers ) => {
-        console.log('log from route GET /petition/signers', signers);
-        res.render( 'signers', {
-            signers
+
+    db.getSigners()
+
+        .then( ( signers ) => {
+            console.log( 'log from route GET /petition/signers', signers );
+            res.render( 'signers', {
+                signers
+            } );
         } );
-    } );
 } );
 
 
@@ -125,16 +141,19 @@ router.get( '/signers', checkIfSigned, ( req, res ) => {
 router.get( '/signers/:city', checkIfSigned, ( req, res ) => {
     console.log( '\n', 'inside: GET /petition/signes/:city' );
     const city = req.params.city;
-    db.getSignersCity( city ).then( ( signersByCity ) => {
-        const signers = {
-            city: city,
-            num: signersByCity.rowCount,
-            signers: signersByCity.rows
-        };
-        res.render( 'city', {
-            signers
+
+    db.getSignersCity( city )
+
+        .then( ( signersByCity ) => {
+            const signers = {
+                city: city,
+                num: signersByCity.rowCount,
+                signers: signersByCity.rows
+            };
+            res.render( 'city', {
+                signers
+            } );
         } );
-    } );
 } );
 
 

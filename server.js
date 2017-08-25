@@ -1,11 +1,16 @@
 // REQUIRED MODULES_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 const express = require( 'express' );
-const morgan = require('morgan');
+const morgan = require( 'morgan' );
 const path = require( 'path' );
 const hb = require( 'express-handlebars' );
 const cookieParser = require( 'cookie-parser' );
 // can remove cookie-session
-const cookieSession = require( 'cookie-session' );
+// const cookieSession = require( 'cookie-session' );
+
+const session = require( 'express-session' );
+const Store = require( 'connect-redis' )( session );
+
+
 const csrf = require( 'csurf' );
 const bodyParser = require( 'body-parser' );
 // const router = require( './routes' );
@@ -17,8 +22,9 @@ const sessionSecret = process.env.SESSIONSECRET || require( './config/secrets.js
 // EXPRESS
 const app = express();
 // _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
 // HTTP request logger middleware
-// app.use(morgan('dev'))
+// app.use( morgan( 'tiny' ) );
 
 
 // TEMPLATING ENGINE:
@@ -37,15 +43,30 @@ app.set( 'views', path.join( __dirname, 'views' ) );
 // MIDDLEWARE __________________________________________________________________
 
 // BODY PARSER
-app.use( bodyParser.urlencoded( { extended: false } ) );
+app.use( bodyParser.urlencoded( {
+    extended: false
+} ) );
 
 // COOKIEPARSER
 app.use( cookieParser() );
 
 // COOKIESESSION
-app.use( cookieSession( {
-    secret: sessionSecret,
-    maxAge: 1000 * 60 * 60 * 24 * 14
+// TODO: can delete cookieSession
+// app.use( cookieSession( {
+//     secret: sessionSecret,
+//     maxAge: 1000 * 60 * 60 * 24 * 14
+// } ) );
+
+// REDIS SESSION: EXPRESS-SESSION CONNECT-REDIS
+app.use( session( {
+    store: new Store( {
+        ttl: 3600,
+        host: process.env.REDIS_URL || 'localhost',
+        port: 6379
+    } ),
+    resave: false,
+    saveUninitialized: true,
+    secret: sessionSecret
 } ) );
 
 
@@ -64,8 +85,8 @@ app.use( csrf( {
 
 // ROUTING _____________________________________________________________________
 //  Connect all our routes to our application
-app.use( '/', require('./routes/root') );
-app.use( '/petition', require('./routes/petition') );
+app.use( '/', require( './routes/root' ) );
+app.use( '/petition', require( './routes/petition' ) );
 
 
 

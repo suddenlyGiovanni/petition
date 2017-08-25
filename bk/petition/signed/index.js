@@ -45,7 +45,7 @@ signed.route( '/' )
         } );
     } );
 
-signed.get( '/tounsign', ( req, res ) => {
+signed.get( '/unsign', ( req, res ) => {
     if ( req.session.user_id && req.session.signature_id ) {
         console.log( 'delete signature request' );
         db.deleteSignature( req.session.user_id ).then( () => {

@@ -5,7 +5,7 @@
 {{signedData }}
 <a href="/profile/edit">Edit your profile</a>
 
-<form action="/petition/signed/tounsign" method="GET">
+<form action="/petition/signed/unsign" method="GET">
     <input type="hidden" name="_csrf" value="{{signedData.csrfToken}}">
     <button type="submit">Delete your signature</button>
 </form>

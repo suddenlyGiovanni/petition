@@ -13,6 +13,7 @@ const {
 
 // CREATE NEW USER
 const postUser = ( firstName, lastName, email, password ) => {
+    console.log( 'fn: "postUser"' );
     // hash user password with bcrypt ( hashPassword ) before saving
     return hashPassword( password )
 
@@ -45,6 +46,8 @@ const postUser = ( firstName, lastName, email, password ) => {
 // GET USER
 const getUserAndProfile = ( user_id ) => {
 
+    console.log( 'fn: "getUserAndProfile"' );
+
     const query = `SELECT users."firstName", users."lastName", users.email ,user_profiles.age, user_profiles.city, user_profiles.url
     FROM users
     JOIN user_profiles
@@ -64,6 +67,7 @@ const getUserAndProfile = ( user_id ) => {
 
 // UPDATE NEW USER
 const putUserAndProfile = ( firstName, lastName, email, password, user_id, age, city, url ) => {
+    console.log( 'fn: "putUserAndProfile"' );
 
     if ( !password || password === null ) {
         const query = `UPDATE users
@@ -84,18 +88,19 @@ const putUserAndProfile = ( firstName, lastName, email, password, user_id, age, 
                     age,
                     city,
                     url
-                ] )
+                ] );
+            } )
 
-                    // clear stagnant data in redis cache
-                    .then( () => {
-                        return redis.set( 'signers', '' );
-                    } )
+            // clear stagnant data in redis cache
+            .then( () => {
+                return redis.set( 'signers', '' );
+            } )
 
-                    .catch( ( err ) => {
-                        console.error( err.stack );
-                    } );
+            .catch( ( err ) => {
+                console.error( err.stack );
             } );
     } else if ( password ) {
+
         return hashPassword( password )
 
             .then( ( hashedPass ) => {
@@ -112,28 +117,30 @@ const putUserAndProfile = ( firstName, lastName, email, password, user_id, age, 
 
             .then( () => {
                 const query = `UPDATE user_profiles
-            SET age = $1, city = $2, url = $3
-            WHERE user_id = ${user_id};`;
+                    SET age = $1, city = $2, url = $3
+                    WHERE user_id = ${user_id};`;
                 return db.query( query, [
                     age,
                     city,
                     url
-                ] )
+                ] );
+            } )
 
-                    // clear stagnant data in redis cache
-                    .then( () => {
-                        return redis.set( 'signers', '' );
-                    } )
+            // clear stagnant data in redis cache
+            .then( () => {
+                return redis.set( 'signers', '' );
+            } )
 
-                    .catch( ( err ) => {
-                        console.error( err.stack );
-                    } );
+            .catch( ( err ) => {
+                console.error( err.stack );
             } );
     }
 };
 
 // AUTHENTICATE USER
 const checkUser = ( email, password ) => {
+
+    console.log( 'fn: "checkUser"' );
 
     // step 1 - search on db for matching email.
     return db.query( 'SELECT EXISTS ( SELECT email FROM users WHERE email = $1 )', [ email ] )
@@ -190,6 +197,8 @@ const checkUser = ( email, password ) => {
 // ADD NEW PROFILE to A USER
 const postUserProfile = ( user_id, age, city, url ) => {
 
+    console.log( 'fn: "postUserProfile"' );
+
     const query = 'INSERT INTO user_profiles (user_id, age, city, url) VALUES ($1, $2, $3, $4)';
 
     return db.query( query, [
@@ -212,6 +221,8 @@ const postUserProfile = ( user_id, age, city, url ) => {
 
 // save new signature to DB
 const postSignature = ( user_id, signature ) => {
+
+    console.log( 'fn: "postSignature"' );
 
     const query = 'INSERT INTO signatures (user_id, signature) VALUES ($1, $2) RETURNING id';
 
@@ -236,20 +247,35 @@ const postSignature = ( user_id, signature ) => {
 
 // retrieve specified signature form DB
 const getSignature = ( user_id ) => {
-    return db.query( 'SELECT signature FROM signatures WHERE user_id = $1', [ user_id ] ).then( ( results ) => {
-        return results.rows[ 0 ].signature;
-    } ).catch( ( err ) => {
-        console.error( err.stack );
-    } );
+
+    console.log( 'fn: "getSignature"' );
+
+    return db.query( 'SELECT signature FROM signatures WHERE user_id = $1', [ user_id ] )
+
+        .then( ( results ) => {
+            return results.rows[ 0 ].signature;
+        } )
+
+        .catch( ( err ) => {
+            console.error( err.stack );
+        } );
 };
 
 const deleteSignature = ( user_id ) => {
+
+    console.log( 'fn: "deleteSignature"' );
+
     const query = 'DELETE FROM signatures WHERE user_id = $1;';
-    return db.query( query, [ user_id ] ).then( () => {
-        return;
-    } ).catch( ( err ) => {
-        console.error( err.stack );
-    } );
+
+    return db.query( query, [ user_id ] )
+
+        .then( () => {
+            return;
+        } )
+
+        .catch( ( err ) => {
+            console.error( err.stack );
+        } );
 };
 
 
@@ -280,9 +306,9 @@ const setSignersInRedis = ( signers ) => {
     return redis.setex( 'signers', 60, signersJson )
 
         .then( ( outcome ) => {
-            if(outcome == 'OK'){
+            if ( outcome == 'OK' ) {
                 console.log( 'inside redis promise: setSignersInRedis - write operation outcome:', outcome );
-            } else{
+            } else {
                 throw 'err:  fn "setSignersInRedis" was unable to save data to redis... ';
             }
         } );
@@ -291,7 +317,7 @@ const setSignersInRedis = ( signers ) => {
 // retrieve all the signers form DB
 const getSigners = () => {
 
-    console.log( 'getSigners' );
+    console.log( 'fn: "getSigners"' );
 
     return redis.get( 'signers' )
 
@@ -302,19 +328,19 @@ const getSigners = () => {
                 return JSON.parse( signers );
             }
             // if no cached signers the query db
-            console.log( 'inside redis promise: no signers - quering psql ' );
+            console.log( 'inside redis promise: no signers - querying psql ' );
             return getSignersFromPsql();
 
         } )
 
         // then save the signers in redis for next query
         .then( ( signers ) => {
-            return setSignersInRedis( signers ).then(()=>{
+            return setSignersInRedis( signers ).then( () => {
                 return signers;
-            });
+            } );
         } )
 
-        // // BUG: here the last then returs the redis status: "OK"
+        // // BUG: here the last then returns the redis status: "OK"
         // .then( ( data ) => {
         //     console.log( 'inside redis promise: end of fn "getSigners" - data return: ', data );
         //     return data;
@@ -328,16 +354,23 @@ const getSigners = () => {
 // retrieve all signer from a specified city
 
 const getSignersCity = ( city ) => {
+
+    console.log( 'fn: "getSignersCity"' );
+
     const query = `SELECT users."firstName", users."lastName", user_profiles.age, user_profiles.url
                 FROM users
                 JOIN user_profiles
                 ON users.id = user_profiles.user_id
                 WHERE user_profiles.city = $1;`;
-    return db.query( query, [ city ] ).then( ( signersByCity ) => {
-        return signersByCity;
-    } ).catch( ( err ) => {
-        console.error( err.stack );
-    } );
+    return db.query( query, [ city ] )
+
+        .then( ( signersByCity ) => {
+            return signersByCity;
+        } )
+
+        .catch( ( err ) => {
+            console.error( err.stack );
+        } );
 };
 
 

@@ -52,7 +52,10 @@ router.route( '/login' )
                     message: 'wrong mail and password'
                 } );
             } else {
-                req.session = userSession;
+                req.session.user_id = userSession.user_id;
+                req.session.firstName = userSession.firstName;
+                req.session.lastName = userSession.lastName;
+                req.session.signature_id = userSession.signature_id;
                 if ( !userSession.signature_id ) {
                     res.redirect( '/petition' );
                 } else {
@@ -95,7 +98,10 @@ router.route( '/register' )
 
         if ( firstName && lastName && email && password ) {
             db.postUser( firstName, lastName, email, password ).then( ( userSession ) => {
-                req.session = userSession;
+                req.session.user_id = userSession.user_id;
+                req.session.firstName = userSession.firstName;
+                req.session.lastName = userSession.lastName;
+                req.session.signature_id = userSession.signature_id;
                 res.redirect( '/profile' );
             } );
         }
