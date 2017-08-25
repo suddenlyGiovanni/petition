@@ -114,7 +114,6 @@ router.get( '/signers', checkIfSigned, ( req, res ) => {
     console.log( '\n', 'inside: GET /petition/signes' );
     db.getSigners().then( ( signers ) => {
         console.log('log from route GET /petition/signers', signers);
-        // BUG: on line 297 of dbQuery.js redis returns a status of "OK"
         res.render( 'signers', {
             signers
         } );

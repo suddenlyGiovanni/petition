@@ -4,12 +4,12 @@ const morgan = require('morgan');
 const path = require( 'path' );
 const hb = require( 'express-handlebars' );
 const cookieParser = require( 'cookie-parser' );
+// can remove cookie-session
 const cookieSession = require( 'cookie-session' );
 const csrf = require( 'csurf' );
 const bodyParser = require( 'body-parser' );
 // const router = require( './routes' );
 const sessionSecret = process.env.SESSIONSECRET || require( './config/secrets.json' ).sessionSecret;
-// const spicedPg = require( 'spiced-pg' );
 
 // MODULES VARIABLES_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 

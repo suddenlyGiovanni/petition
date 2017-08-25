@@ -263,13 +263,29 @@ const getSignersFromPsql = () => {
     return db.query( query )
 
         .then( ( results ) => {
-            console.log( results.rows );
+            console.log( 'inside redis promise: getSignersFromPsql ', results.rows );
             return results.rows;
         } );
 
     // .catch( ( err ) => {
     //     console.error( err.stack );
     // } );
+};
+
+const setSignersInRedis = ( signers ) => {
+
+    const signersJson = JSON.stringify( signers );
+    console.log( 'inside redis promise: setSignersInRedis ', signersJson );
+
+    return redis.setex( 'signers', 60, signersJson )
+
+        .then( ( outcome ) => {
+            if(outcome == 'OK'){
+                console.log( 'inside redis promise: setSignersInRedis - write operation outcome:', outcome );
+            } else{
+                throw 'err:  fn "setSignersInRedis" was unable to save data to redis... ';
+            }
+        } );
 };
 
 // retrieve all the signers form DB
@@ -280,7 +296,7 @@ const getSigners = () => {
     return redis.get( 'signers' )
 
         .then( ( signers ) => {
-            // if there is a cached version on redis use that..
+            // if there is a cached version on redis use that query
             if ( signers ) {
                 console.log( 'inside redis promise: signers ', signers );
                 return JSON.parse( signers );
@@ -290,17 +306,19 @@ const getSigners = () => {
             return getSignersFromPsql();
 
         } )
+
         // then save the signers in redis for next query
         .then( ( signers ) => {
-            const signersJson = JSON.stringify( signers );
-            console.log( signersJson );
-            return redis.setex( 'signers', 60, signersJson );
+            return setSignersInRedis( signers ).then(()=>{
+                return signers;
+            });
         } )
-        // BUG: here the last then returs the redis status: "OK"
 
-        .then( ( data ) => {
-            console.log( data );
-        } )
+        // // BUG: here the last then returs the redis status: "OK"
+        // .then( ( data ) => {
+        //     console.log( 'inside redis promise: end of fn "getSigners" - data return: ', data );
+        //     return data;
+        // } )
 
         .catch( ( err ) => {
             console.error( err.stack );
