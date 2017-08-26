@@ -1,33 +1,44 @@
-<link rel="stylesheet" href="/css/header.css">
-
-<!-- <h1>HEADER</h1>
-<nav>
-    <ul>
-        <li><a href="/">/</a></li>
-        <li><a href="/login">/login</a></li>
-        <li><a href="/register">/register</a></li>
-        <li><a href="/profile">/profile</a></li>
-        <li><a href="/profile/edit">/profile/edit</a></li>
-        <li><a href="/petition">/petition</a></li>
-        <li><a href="/petition/signed">/petition/signed</a></li>
-        <li><a href="/petition/signers">/petition/signers</a></li>
-    </ul>
-</nav> -->
-
-
-
+<!-- NAVBAR -->
 <nav>
     <div class="nav-wrapper">
-        <a href="#" class="brand-logo">Logo</a>
-        <ul id="nav-mobile" class="right hide-on-med-and-down">
-            <li><a href="/">/</a></li>
-            <li><a href="/login">/login</a></li>
-            <li><a href="/register">/register</a></li>
-            <li><a href="/profile">/profile</a></li>
-            <li><a href="/profile/edit">/profile/edit</a></li>
-            <li><a href="/petition">/petition</a></li>
-            <li><a href="/petition/signed">/petition/signed</a></li>
-            <li><a href="/petition/signers">/petition/signers</a></li>
-        </ul>
+        <a href="/" class="brand-logo">Petition</a>
+
+        <a href="#!" data-activates="slide-out" class="button-collapse"><i class="material-icons">menu</i></a>
+
+            <ul class="right hide-on-med-and-down">
+                <li><a href="/register">Register</a></li>
+                <li><a href="/login">Log In</a></li>
+                <li><a href="/logout">Log Out</a></li>
+            </ul>
+
+
+            <!-- SIDEBAR -->
+            <ul id="slide-out" class="side-nav fixed">
+                <li>
+                    <div class="user-view">
+                        <div class="background">
+                            <img src="/images/background1.jpg" alt="img">
+                        </div>
+                        <!-- <a href="#!user"><img class="circle" src="images/yuna.jpg"></a> -->
+                        <a href="#!name"><span class="white-text name">firstName lastName</span></a>
+                        <a href="#!email"><span class="white-text email">email</span></a>
+                    </div>
+                </li>
+                <li><a class="subheader">User profile</a></li>
+
+                <li><a href="/login"><i class="material-icons">exit_to_app</i>Log in</a></li>
+
+                <li><a href="/logout"><i class="material-icons">exit_to_app</i>Log out</a></li>
+                <li><a href="/register"><i class="material-icons">exit_to_app</i>Register</a></li>
+
+                <li><a href="/profile/edit"><i class="material-icons">exit_to_app</i>edit profile</a></li>
+
+                <div class="divider"></div>
+                </li>
+                <li><a class="subheader">Petition</a></li>
+                <li><a class="waves-effect" href="/petition">Sign the Petition</a></li>
+                <li><a class="waves-effect" href="/petition/signers">View all Signers</a></li>
+
+            </ul>
     </div>
 </nav>

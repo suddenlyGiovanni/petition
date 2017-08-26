@@ -8,13 +8,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!--Import Google Icon Font-->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <!--Import materialize.css-->
-    <link type="text/css" rel="stylesheet" href="/css/materialize.css" media="screen,projection" />
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.1/css/materialize.min.css">
     <!--Import your_styles.css-->
     <link rel="stylesheet" href="/css/main.css">
-    <!--Import jQuery before materialize.js-->
-    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-    <script type="text/javascript" src="js/materialize.min.js"></script>
 </head>
 
 <body>
@@ -23,6 +20,7 @@
         {{>header}}
     </header>
 
+    <!-- MAIN -->
     <main>
         <div class="container">
             <!-- Page Content goes here -->
@@ -30,9 +28,18 @@
         </div>
     </main>
 
+
+    <!-- FOOTER -->
     <footer>
         {{>footer}}
     </footer>
+
+    <!--Import jQuery before materialize.js-->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.1/js/materialize.min.js"></script>
+    <script type="text/javascript" src="/js/main.js"></script>
+    <script type="text/javascript" src="/js/petition.js"></script>
 </body>
 
 </html>
