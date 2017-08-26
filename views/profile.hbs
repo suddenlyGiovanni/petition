@@ -1,22 +1,41 @@
 <!-- /profile -->
 
 <h2>Please tell us now just a little bit more about youreself.</h2>
-<form class="profile" action="/profile" method="POST">
+<div class="row">
 
-    <input type="hidden" name="_csrf" value="{{csrfToken}}">
+    <form class="profile col s12" action="/profile" method="POST">
 
-    <p>
-        <label>Age <input type="number" name="age" placeholder="21"></label>
-    </p>
+        <input type="hidden" name="_csrf" value="{{csrfToken}}">
 
-    <p>
-        <label>City <input type="text" name="city" placeholder="Berlin" autocomplete="address-level2"></label>
-    </p>
+        <div class="row">
 
-    <p>
-        <label>Homepage <input type="url" name="url" placeholder="https://www.jhondoe.com" autocomplete="url"></label>
-    </p>
+            <!-- AGE -->
+            <div class="input-field col s3 m4">
+                <i class="material-icons prefix">cake</i>
+                <input id="age" class="validate" type="number" name="age" placeholder="21">
+                <label for="age" class="active">Age</label>
+            </div>
 
+            <!-- CITY -->
+            <div class="input-field col s9 m8">
+                <i class="material-icons prefix">place</i>
+                <input id="city" class="validate" type="text" name="city" autocomplete="address-level2" placeholder="Berlin">
+                <label for="city" class="active">City</label>
+            </div>
+        </div>
 
-    <button type="submit" name="submit">CONTINUE</button>
-</form>
+        <!-- URL -->
+        <div class="row">
+            <div class="input-field col s12">
+                <i class="material-icons prefix">link</i>
+                <input id="url" class="validate" type="url" name="url" autocomplete="url" placeholder="https://www.jhondoe.com">
+                <label for="url" class="active" data-error="wrong url format" data-success="right">Home Page</label>
+            </div>
+        </div>
+
+        <button class="btn waves-effect waves-light" type="submit" name="continue">
+            CONTINUE<i class="material-icons right">navigate_next</i>
+        </button>
+
+    </form>
+</div>

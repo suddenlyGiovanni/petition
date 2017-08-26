@@ -1,18 +1,33 @@
 <!-- /login -->
+<div class="row">
 
-<h1>Please log in.</h1>
-<form class="login" action="/login" method="post">
-    <input type="hidden" name="_csrf" value="{{csrfToken}}">
+    <h1>Please log in.</h1>
+    <form class="col s12 login" action="/login" method="post">
+        <input type="hidden" name="_csrf" value="{{csrfToken}}">
 
-    <p>
-        <label>Email Address <input type="email" name="email" placeholder="jhon.doe@email.com" autocomplete="email" required></label>
-    </p>
+        <!-- EMAIL -->
+        <div class="row">
+            <div class="input-field col s12">
+                <i class="material-icons prefix">email</i>
+                <input id="email" class="validate" type="email" name="email" autocomplete="email" required>
+                <label for="email" class="active" data-error="wrong email format" data-success="right">Email Address</label>
+            </div>
+        </div>
 
-    <p>
-        <label>Password <input type="password" name="password" placeholder="letmein" autocomplete="current-password" required></label>
-    </p>
+        <!-- PASSWORD -->
+        <div class="row">
+            <div class="input-field col s12">
+                <i class="material-icons prefix">fingerprint</i>
+                <input id="password" class="validate" type="password" name="password" autocomplete="current-password" required>
+                <label for="password" class="active" data-error="wrong" data-success="right">Password</label>
+            </div>
+        </div>
 
-    <button type="submit" name="submit">LOGIN</button>
-</form>
+        <button class="btn waves-effect waves-light pulse" type="submit" name="action">LOG IN
+            <i class="material-icons right">account_box</i>
+        </button>
+    </form>
 
-<p>if you are not already registered, you can <a href="/register">register here</a></p>
+    <p>if you are not already registered, you can <a href="/register">register here</a></p>
+
+</div>

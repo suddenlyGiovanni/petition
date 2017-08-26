@@ -85,8 +85,8 @@ $( document ).ready( function () {
 
     // SIGNATURES clear canvas
     function clear() {
-        $( 'input[name="firstName"]' ).val( '' );
-        $( 'input[name="lastName"]' ).val( '' );
+        // $( 'input[name="firstName"]' ).val( '' );
+        // $( 'input[name="lastName"]' ).val( '' );
         $( 'input[name="signature"]' ).val( '' );
         ctx.clearRect( 0, 0, $canvas.width, $canvas.height );
     }

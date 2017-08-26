@@ -1,17 +1,38 @@
 <p>we have <b>{{signers.num}}</b> signers in <b>{{signers.city}}</b></p>
-<ul>
-    {{#each signers.signers}}
-        <li>
-            {{#if this.url}}
-                <a href="http://{{this.url}}" target="_blank">
-                    {{this.firstName}} {{this.lastName}}
+<table class="col s12 m 12 striped ">
+    <thead>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Age</th>
+    </thead>
+    <tbody>
+        {{#each signers.signers}}
+            <tr>
+                <td>
+                    {{#if this.url}}
+                        <a href="http://{{this.url}}" target="_blank">
+                    {{this.firstName}}
                 </a>
-            {{else}}
-                {{this.firstName}} {{this.lastName}}
-            {{/if}}&nbsp;
-            ({{#if this.age}}
-                {{ this.age }}
-            {{/if}})
-        </li>
-    {{/each}}
-</ul>
+                    {{else}}
+                        {{this.firstName}}
+                    {{/if}}
+                </td>
+                <td>
+                    {{#if this.url}}
+                        <a href="http://{{this.url}}" target="_blank">
+                    {{this.lastName}}
+                </a>
+                    {{else}}
+                        {{this.lastName}}
+                    {{/if}}
+                </td>
+
+                <td>
+                    {{#if this.age}}
+                        {{this.age}}
+                    {{/if}}
+                </td>
+            </tr>
+        {{/each}}
+    </tbody>
+</table>

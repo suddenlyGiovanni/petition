@@ -1,11 +1,33 @@
-<p>thank you for your signature!</p>
-{{signedData }}
-    <img src="{{this.signature}}" alt="signature">
-    <a href="/petition/signers">See all {{this.num}} signers</a>
-{{signedData }}
-<a href="/profile/edit">Edit your profile</a>
+{{signedData}}
+<div class="row">
+    <div class="col s12 m7">
 
-<form action="/petition/signed/unsign" method="GET">
-    <input type="hidden" name="_csrf" value="{{signedData.csrfToken}}">
-    <button type="submit">Delete your signature</button>
-</form>
+        <!-- CARD -->
+        <div class="card">
+            <form action="/petition/signed/unsign" method="GET">
+                <input type="hidden" name="_csrf" value="{{signedData.csrfToken}}">
+
+                <div class="card-image">
+                    <img src="{{this.signature}}" alt="signature">
+                    <button class="btn-floating halfway-fab waves-effect waves-light red" type="submit">
+                        <i class="material-icons">delete_forever</i>
+                    </button>
+                </div>
+
+                <div class="card-content">
+                    <span class="card-title">
+                        Thank you <b>{{this.firstName}} {{this.lastName}}</b>
+                    </span>
+                    <p>every signature makes a difference!</p>
+                </div>
+
+                <div class="card-action">
+                    <a href="/petition/signers">See all {{this.num}} signers</a>
+                </div>
+
+            </form>
+        </div>
+
+    </div>
+</div>
+{{signedData}}

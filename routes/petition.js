@@ -81,7 +81,9 @@ router.get( '/signed', checkIfSigned, ( req, res ) => {
     console.log( '\n', 'inside: GET /petition/signed' );
     const user_id = req.session.user_id;
     let signedData = {
-        csrfToken: req.csrfToken()
+        csrfToken: req.csrfToken(),
+        firstName: req.session.firstName,
+        lastName: req.session.lastName
     };
 
     const getSignature = db.getSignature( user_id )

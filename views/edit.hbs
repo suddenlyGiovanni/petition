@@ -1,39 +1,81 @@
 <!-- /profile/edit -->
 {{#userData}}
-<h2>Edit your profile information</h2>
-<form class="profile_edit" action="/profile/edit" method="POST">
-    <input type="hidden" name="_csrf" value="{{csrfToken}}">
+    <h2>Edit your profile information</h2>
 
-    <p>
-        <label>First Name <input type="given-name" name="firstName" value="{{firstName}}" autocomplete="given-name" required></label>
-    </p>
-
-    <p>
-        <label>Last Name <input type="family-name" name="lastName" value="{{lastName}}" autocomplete="family-name" required></label>
-    </p>
+    <div class="row">
 
 
-    <p>
-        <label>Email Address <input type="email" name="email" value="{{email}}" autocomplete="email" required></label>
-    </p>
+        <form class="profile_edit col s12" action="/profile/edit" method="POST">
 
-    <p>
-        <label>Password <input type="password" name="password" autocomplete="new-password" disabled></label>
-    </p>
+            <input type="hidden" name="_csrf" value="{{csrfToken}}">
 
-    <p>
-        <label>Age <input type="number" name="age" value="{{age}}"></label>
-    </p>
+            <div class="row">
+
+                <!-- FIRST NAME -->
+                <div class="input-field col s12 m6">
+                    <i class="material-icons prefix">person</i>
+                    <input id="firstName" class="validate" type="text" name="firstName" autocomplete="given-name" value="{{firstName}}" required>
+                    <label for="firstName" class="active">First Name</label>
+                </div>
+
+                <!-- LAST NAME -->
+                <div class="input-field col s12 m6">
+                    <i class="material-icons prefix">person_outline</i>
+                    <input id="family-name" class="validate" type="text" name="lastName" autocomplete="family-name" value="{{lastName}}" required>
+                    <label for="family-name" class="active">Last Name</label>
+                </div>
+            </div>
+
+            <!-- EMAIL -->
+            <div class="row">
+                <div class="input-field col s12">
+                    <i class="material-icons prefix">email</i>
+                    <input id="email" class="validate" type="email" name="email" autocomplete="email" value="{{email}}" required>
+                    <label for="email" class="active" data-error="wrong email format" data-success="right">Email Address</label>
+                </div>
+            </div>
+
+            <!-- PASSWORD -->
+            <div class="row">
+                <div class="input-field col s12">
+                    <i class="material-icons prefix">fingerprint</i>
+                    <input id="password" class="validate" type="password" name="password" autocomplete="new-password">
+                    <label for="password" class="active" data-error="wrong" data-success="right">Password</label>
+                </div>
+            </div>
 
 
-    <p>
-        <label>City <input type="text" name="city" value="{{city}}" autocomplete="address-level2"></label>
-    </p>
+            <div class="row">
 
+                <!-- AGE -->
+                <div class="input-field col s3 m4">
+                    <i class="material-icons prefix">cake</i>
+                    <input id="age" class="validate" type="number" name="age" value="{{age}}">
+                    <label for="age" class="active">Age</label>
+                </div>
 
-    <input id="url" type="url" name="url" value="{{url}}">
-    <label for="url">Homepage</label>
+                <!-- CITY -->
+                <div class="input-field col s9 m8">
+                    <i class="material-icons prefix">place</i>
+                    <input id="city" class="validate" type="text" name="city" autocomplete="address-level2" value="{{city}}">
+                    <label for="city" class="active">City</label>
+                </div>
+            </div>
 
-    <button type="submit" name="update">UPDATE</button>
-</form>
+            <!-- URL -->
+            <div class="row">
+                <div class="input-field col s12">
+                    <i class="material-icons prefix">link</i>
+                    <input id="url" class="validate" type="url" name="url" autocomplete="url" value="{{url}}">
+                    <label for="url" class="active" data-error="wrong url format" data-success="right">Home Page</label>
+                </div>
+            </div>
+
+            <button class="btn waves-effect waves-light" type="submit" name="update">UPDATE
+                <i class="material-icons right">cached</i>
+            </button>
+
+        </form>
+    </div>
+
 {{/userData}}
